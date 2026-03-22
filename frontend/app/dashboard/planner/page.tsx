@@ -62,10 +62,8 @@ export default function PlannerDashboard() {
   const recent = [...missions]
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     .slice(0, 5);
-
   return (
     <div className="space-y-8">
-
       {/* ── Page header ── */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
@@ -95,7 +93,6 @@ export default function PlannerDashboard() {
           </button>
         </Link>
       </motion.div>
-
       {/* ── Stats row ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {STAT_CARDS.map((card, i) => (
@@ -115,103 +112,106 @@ export default function PlannerDashboard() {
           </motion.div>
         ))}
       </div>
-
       {/* ── Recent missions ── */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.36 }}
-      >
-        <NoisePatternCard>
-          {/* Card header */}
-          <div
-            className="flex items-center justify-between px-6 py-4"
-            style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
-          >
-            <p className="section-label">Recent Missions</p>
-            <Link
-              href="/dashboard/planner/missions"
-              className="text-xs transition-colors hover:underline"
-              style={{ color: "#00E5FF" }}
+      <div className="grid grid-cols-1 gap-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.36 }}
+        >
+          <NoisePatternCard>
+            {/* Card header */}
+            <div
+              className="flex items-center justify-between px-6 py-2"
+              style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
             >
-              View all ›
-            </Link>
-          </div>
-
-          {loading ? (
-            <div className="p-6 space-y-3">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="h-[52px] rounded-lg animate-pulse" style={{ background: "rgba(255,255,255,0.04)" }} />
-              ))}
-            </div>
-          ) : recent.length === 0 ? (
-            <div className="py-16 text-center">
-              <Rocket className="w-10 h-10 mx-auto mb-3" style={{ color: "rgba(240,244,255,0.1)" }} />
-              <p className="text-sm" style={{ color: "rgba(240,244,255,0.4)" }}>No missions yet.</p>
-              <Link href="/dashboard/planner/missions/new" className="text-sm underline mt-1 block" style={{ color: "#00E5FF" }}>
-                Create your first mission →
+              <p className="section-label">Recent Missions</p>
+              <Link
+                href="/dashboard/planner/missions"
+                className="text-xs transition-colors hover:underline"
+                style={{ color: "#00E5FF" }}
+              >
+                View all ›
               </Link>
             </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                    {["Mission", "Target", "Vehicle", "Launch Date", "Status", ""].map((h) => (
-                      <th
-                        key={h}
-                        className="text-left px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] whitespace-nowrap"
-                        style={{ color: "rgba(240,244,255,0.35)" }}
-                      >
-                        {h}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {recent.map((m, i) => (
-                    <tr
-                      key={m.id}
-                      className="group row-animate transition-colors duration-150"
-                      style={{
-                        borderBottom: "1px solid rgba(255,255,255,0.04)",
-                        animationDelay: `${i * 30}ms`,
-                      }}
-                      onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(0,229,255,0.04)")}
-                      onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-                    >
-                      <td className="px-6 h-[52px] font-semibold text-[14px] truncate max-w-[160px]" style={{ color: "#F0F4FF" }}>
-                        {m.title}
-                      </td>
-                      <td className="px-6 h-[52px] hidden sm:table-cell font-['JetBrains_Mono',monospace] text-[13px] capitalize" style={{ color: "rgba(240,244,255,0.6)" }}>
-                        {m.target_body}
-                      </td>
-                      <td className="px-6 h-[52px] hidden md:table-cell font-['JetBrains_Mono',monospace] text-[13px] uppercase" style={{ color: "rgba(240,244,255,0.6)" }}>
-                        {m.vehicle_class}
-                      </td>
-                      <td className="px-6 h-[52px] hidden md:table-cell font-['JetBrains_Mono',monospace] text-[13px]" style={{ color: "rgba(240,244,255,0.6)" }}>
-                        {m.launch_date ?? "—"}
-                      </td>
-                      <td className="px-6 h-[52px]">
-                        <StatusBadge status={m.status} />
-                      </td>
-                      <td className="px-6 h-[52px]">
-                        <Link
-                          href={`/dashboard/planner/missions/${m.id}`}
-                          className="text-[13px] transition-all hover:underline"
-                          style={{ color: "#00E5FF" }}
+            {loading ? (
+              <div className="p-4 space-y-2">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="h-[52px] rounded-lg animate-pulse" style={{ background: "rgba(255,255,255,0.04)" }} />
+                ))}
+              </div>
+            ) : recent.length === 0 ? (
+              <div className="py-8 text-center">
+                <Rocket className="w-10 h-10 mx-auto mb-3" style={{ color: "rgba(240,244,255,0.1)" }} />
+                <p className="text-sm" style={{ color: "rgba(240,244,255,0.4)" }}>No missions yet.</p>
+                <Link href="/dashboard/planner/missions/new" className="text-sm underline mt-0 block" style={{ color: "#00E5FF" }}>
+                  Create your first mission
+                </Link>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                      {[
+                        "Mission",
+                        "Target",
+                        "Vehicle",
+                        "Launch Date",
+                        "Status",
+                        "",
+                      ].map((h) => (
+                        <th
+                          key={h}
+                          className="text-left px-6 py-2 text-[11px] font-semibold uppercase tracking-[0.08em] whitespace-nowrap align-middle"
+                          style={{ color: "rgba(240,244,255,0.35)" }}
                         >
-                          View ›
-                        </Link>
-                      </td>
+                          {h}
+                        </th>
+                      ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </NoisePatternCard>
-      </motion.div>
+                  </thead>
+                  <tbody>
+                    {recent.map((m, i) => (
+                      <tr
+                        key={m.id}
+                        className="group row-animate transition-colors duration-150"
+                        style={{
+                          borderBottom: "1px solid rgba(255,255,255,0.04)",
+                          animationDelay: `${i * 30}ms`,
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(0,229,255,0.04)")}
+                        onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                      >
+                        <td className="px-6 h-[52px] font-semibold text-[14px] truncate max-w-[160px]" style={{ color: "#F0F4FF" }}>
+                          {m.title}
+                        </td>
+                        <td className="px-6 h-[52px] hidden sm:table-cell font-['JetBrains_Mono',monospace] text-[13px] capitalize" style={{ color: "rgba(240,244,255,0.6)" }}>
+                          {m.target_body}
+                        </td>
+                        <td className="px-6 h-[52px] hidden md:table-cell font-['JetBrains_Mono',monospace] text-[13px] uppercase" style={{ color: "rgba(240,244,255,0.6)" }}>
+                          {m.vehicle_class}
+                        </td>
+                        <td className="px-6 h-[52px] hidden md:table-cell font-['JetBrains_Mono',monospace] text-[13px]" style={{ color: "rgba(240,244,255,0.6)" }}>
+                          {m.launch_date ?? "—"}
+                        </td>
+                        <td className="px-6 h-[52px]">
+                          <StatusBadge status={m.status} />
+                        </td>
+                        <td className="px-6 h-[52px]">
+                          <Link href={`/dashboard/planner/missions/${m.id}`} className="text-xs underline" style={{ color: "#00E5FF" }}>
+                            View
+                          </Link>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </NoisePatternCard>
+        </motion.div>
+      </div>
     </div>
   );
 }

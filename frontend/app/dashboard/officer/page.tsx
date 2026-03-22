@@ -4,7 +4,8 @@ import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import api from "@/lib/api";
-import { NoisePatternCard, StatTile } from "@/components/ui/card-with-noise-pattern";
+import { NoisePatternCard } from "@/components/ui/card-with-noise-pattern";
+import MissionStatsCards from "@/components/MissionStatsCards";
 import {
   Clock,
   CheckCircle2,
@@ -143,19 +144,21 @@ export default function OfficerHome() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatTile icon={Satellite}    label="Total Missions"  value={analytics?.total_missions ?? 0}  accent="#00E5FF" loading={loading} />
-        <StatTile icon={Clock}        label="Pending Review"  value={pending.length}                   accent="#F59E0B" loading={loading} />
-        <StatTile icon={CheckCircle2} label="Approved Today"  value={approvedToday}                    accent="#00C896" loading={loading} />
-        <StatTile icon={Users}        label="Active Planners" value={activePlanners.length}             accent="#0066FF" loading={loading} />
-      </div>
+      {analytics && (
+        <MissionStatsCards
+          totalMissions={analytics.total_missions}
+          pending={analytics.pending}
+          approved={analytics.approved}
+          rejected={analytics.rejected}
+        />
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         {/* Pending queue */}
         <NoisePatternCard className="lg:col-span-2">
           <div
-            className="flex items-center justify-between px-6 py-4"
+            className="flex items-center justify-between px-6 py-2"
             style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
           >
             <div className="flex items-center gap-2">
@@ -171,8 +174,8 @@ export default function OfficerHome() {
               )}
             </div>
             <Link
-              href="/dashboard/officer/missions?status=pending_approval"
-              className="flex items-center gap-1 text-xs transition-colors hover:underline"
+              href="/dashboard/officer/missions"
+              className="text-left px-6 py-1 text-[11px] font-semibold uppercase tracking-[0.08em]"
               style={{ color: "#00E5FF" }}
             >
               View all <ArrowRight className="w-3 h-3" />
@@ -180,13 +183,13 @@ export default function OfficerHome() {
           </div>
 
           {loading ? (
-            <div className="p-6 space-y-3">
+            <div className="p-4 space-y-2">
               {[...Array(4)].map((_, i) => (
                 <div key={i} className="h-[52px] rounded-lg animate-pulse" style={{ background: "rgba(255,255,255,0.04)" }} />
               ))}
             </div>
           ) : pending.length === 0 ? (
-            <div className="py-12 text-center">
+            <div className="py-8 text-center">
               <CheckCircle2 className="w-8 h-8 mx-auto mb-2" style={{ color: "#00C896" }} />
               <p className="text-sm" style={{ color: "rgba(240,244,255,0.4)" }}>All missions reviewed — queue clear</p>
             </div>
@@ -289,13 +292,13 @@ export default function OfficerHome() {
             <table className="w-full">
               <thead>
                 <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                  {["Planner", "Submitted", "Approved", "Rejected", "Rate"].map((h) => (
+                  {["Planner", "Submitted", "Approved", "Rejected", "Rate"].map((header) => (
                     <th
-                      key={h}
+                      key={header}
                       className="text-left px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.08em]"
                       style={{ color: "rgba(240,244,255,0.35)" }}
                     >
-                      {h}
+                      {header}
                     </th>
                   ))}
                 </tr>

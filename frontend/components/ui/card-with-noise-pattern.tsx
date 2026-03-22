@@ -1,92 +1,36 @@
-"use client";
+import * as React from "react";
+import { Card } from "./card";
 
-import { cn } from "@/lib/utils";
-
-// ── NoisePatternCard ──────────────────────────────────────────────────────────
-// CHRONOS-1 surface card: solid #0F1923, subtle border, 12px radius, hover lift.
-
-interface NoisePatternCardProps {
-  children: React.ReactNode;
-  className?: string;
-  /** Pass an accent color hex (e.g. "#00E5FF") to render a top accent border */
-  accent?: string;
-  hover?: boolean;
-}
-
-import { usePathname } from "next/navigation";
-
-export function NoisePatternCard({
-  children,
-  className,
-  hover = false,
-}: NoisePatternCardProps) {
-  // Always apply blur for all cards, including landing page
-  return (
-    <div
-      className={cn(
-        "relative overflow-hidden rounded-xl",
-        "border border-[rgba(255,255,255,0.06)]",
-        "shadow-[0_2px_16px_rgba(0,0,0,0.35)]",
-        hover && "cursor-pointer transition-colors duration-200 hover:bg-[#162030]/60",
-        className,
-      )}
-      style={{
-        background: '#0F1923',
-        zIndex: 100,
-        position: 'relative',
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
-// ── NoisePatternCardBody ──────────────────────────────────────────────────────
-
-interface NoisePatternCardBodyProps {
-  children: React.ReactNode;
-  className?: string;
-}
-
-export function NoisePatternCardBody({ children, className }: NoisePatternCardBodyProps) {
-  return (
-    <div className={cn("p-5 md:p-6", className)}>
-      {children}
-    </div>
-  );
-}
-
-// ── StatTile ──────────────────────────────────────────────────────────────────
-// Stat card per design spec: icon TL, value TR, label BL, accent top border.
 
 interface StatTileProps {
-  icon: React.ComponentType<{ className?: string }>;
+  icon: React.ComponentType<{ size?: number; color?: string }>;
   label: string;
-  value: string | number;
-  accent: string;   // hex color
+  value: number | string;
+  accent?: string;
   loading?: boolean;
 }
 
-export function StatTile({ icon: Icon, label, value, accent, loading }: StatTileProps) {
+export function StatTile({ icon: Icon, label, value, accent = "#00E5FF", loading }: StatTileProps) {
   return (
-    <NoisePatternCard hover>
-      <div className="p-5 flex items-center gap-4">
-        <div
-          className="shrink-0 w-10 h-10 rounded-lg flex items-center justify-center"
-          style={{ background: `${accent}18`, color: accent }}
-        >
-          <Icon className="h-4.5 w-4.5" />
-        </div>
-        <div className="min-w-0">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.08em] mb-1" style={{ color: "rgba(240,244,255,0.4)" }}>{label}</p>
-          <span
-            className="font-['JetBrains_Mono',monospace] text-[28px] font-bold leading-none"
-            style={{ color: "#F0F4FF" }}
-          >
-            {loading ? "—" : value}
-          </span>
-        </div>
+    <div
+      className="flex flex-row items-center w-full bg-card border border-border rounded-2xl shadow-sm px-4 py-3"
+      style={{ minHeight: 80 }}
+    >
+      <div className="flex items-center justify-center w-10 h-10 rounded-full mr-3" style={{ background: accent + "22" }}>
+        <Icon size={24} color={accent} />
       </div>
-    </NoisePatternCard>
+      <div className="flex flex-col flex-1">
+        <span className="text-xl font-normal leading-tight" style={{ color: accent }}>
+          {loading ? <span className="animate-pulse">...</span> : value}
+        </span>
+        <span className="text-xs font-medium text-muted-foreground tracking-wide mt-0 uppercase">{label}</span>
+      </div>
+    </div>
+  );
+}
+
+export function NoisePatternCard({ className = "", ...props }: React.ComponentProps<"div">) {
+  return (
+    <Card className={`bg-[url('/noise.png')] bg-cover bg-blend-overlay ${className}`} {...props} />
   );
 }

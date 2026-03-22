@@ -160,7 +160,7 @@ export default function OfficerAnalyticsPage() {
               <thead className="sticky top-0" style={{ background: "#0F1923" }}>
                 <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
                   {["Planner", "Sub.", "Appr.", "Rej.", "Rate"].map((h) => (
-                    <th key={h} className="text-left pb-2 pr-4 text-[11px] uppercase tracking-[0.08em] font-semibold" style={{ color: "rgba(240,244,255,0.35)" }}>{h}</th>
+                    <th key={h} className="text-left pb-1 pr-4 text-[11px] uppercase tracking-[0.08em] font-semibold" style={{ color: "rgba(240,244,255,0.35)" }}>{h}</th>
                   ))}
                 </tr>
               </thead>

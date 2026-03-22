@@ -165,11 +165,11 @@ export default function EarthCanvas() {
       animId = requestAnimationFrame(animate);
       const elapsed = (Date.now() - startTime) / 1000; // seconds
 
-      // Make rotation extremely obvious
-      earth.rotation.y = elapsed * 5.0; // much faster
-      clouds.rotation.y = elapsed * 6.0;
+      // Slow down Earth's rotation
+      earth.rotation.y = elapsed * 0.3; // much slower
+      clouds.rotation.y = elapsed * 0.36;
 
-      const issAngle = elapsed * 2.5;
+      const issAngle = elapsed * 0.5;
       iss.position.set(
         ISS_RADIUS * Math.cos(issAngle),
         ISS_RADIUS * Math.sin(issAngle) * Math.sin(ISS_INCLINATION),
