@@ -1,0 +1,45 @@
+# Web Framework
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+
+# Database
+sqlalchemy==2.0.36
+psycopg2-binary==2.9.10
+alembic==1.14.0
+
+# Authentication & Security
+python-jose[cryptography]==3.3.0
+bcrypt==4.3.0
+python-multipart==0.0.17
+
+# Configuration
+pydantic[email]==2.10.3
+pydantic-settings==2.6.1
+python-dotenv==1.0.1
+
+# HTTP
+httpx==0.28.1
+
+# Date/Time
+python-dateutil==2.9.0
+
+# Scientific / Physics (Phase 2)
+numpy==2.2.0
+scipy==1.14.1
+geopy==2.4.1
+
+# AI/ML (Phase 2)
+scikit-learn==1.6.0
+joblib==1.4.2
+pandas==2.2.3
+
+# PDF Export (Phase 5)
+reportlab==4.2.5
+
+# Rate Limiting
+slowapi==0.1.9
+
+# Testing
+pytest==8.3.4
+pytest-asyncio==0.24.0
+httpx==0.28.1
