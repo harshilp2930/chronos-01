@@ -278,7 +278,7 @@ feat  fix  docs  style  refactor  ml  ui
 
 ## Environment Variables
 
-Use `backend/.env.example` as baseline.
+Create your own `backend/.env` file for environment variables. There is no .env.example in this repo.
 
 Example backend values:
 
