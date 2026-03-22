@@ -15,10 +15,11 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
 
-from app.api import analytics, auth, missions, optimization, safety, scrub, simulation, users
+from app.api import analytics, auth, missions, optimization, safety, scrub, simulation, users, weather
 from app.ai.scrub_model import ModelNotReadyError, get_model
 from app.core.config import settings
 from app.core.database import Base, engine
+from app.api import weather
 
 logger = logging.getLogger(__name__)
 
@@ -116,6 +117,7 @@ app.include_router(simulation.router, prefix=API_PREFIX)
 app.include_router(safety.router, prefix=API_PREFIX)
 app.include_router(optimization.router, prefix=API_PREFIX)
 app.include_router(scrub.router, prefix="/api/v1/scrub")
+app.include_router(weather.router, prefix="/api/v1")  # Register weather endpoints
 
 
 # ── Health check ──────────────────────────────────────────────────────────────

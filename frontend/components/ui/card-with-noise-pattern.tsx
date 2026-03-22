@@ -13,22 +13,28 @@ interface NoisePatternCardProps {
   hover?: boolean;
 }
 
+import { usePathname } from "next/navigation";
+
 export function NoisePatternCard({
   children,
   className,
   hover = false,
 }: NoisePatternCardProps) {
+  // Always apply blur for all cards, including landing page
   return (
     <div
       className={cn(
         "relative overflow-hidden rounded-xl",
-        "bg-[#0F1923]/50",
         "border border-[rgba(255,255,255,0.06)]",
         "shadow-[0_2px_16px_rgba(0,0,0,0.35)]",
         hover && "cursor-pointer transition-colors duration-200 hover:bg-[#162030]/60",
         className,
       )}
-
+      style={{
+        background: '#0F1923',
+        zIndex: 100,
+        position: 'relative',
+      }}
     >
       {children}
     </div>

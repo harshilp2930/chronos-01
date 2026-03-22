@@ -157,17 +157,19 @@ export default function EarthCanvas() {
       trailDots.push(dot);
     }
 
+
     let animId: number;
-    let t = 0;
+    const startTime = Date.now();
 
     const animate = () => {
       animId = requestAnimationFrame(animate);
-      t += 0.003;
+      const elapsed = (Date.now() - startTime) / 1000; // seconds
 
-      earth.rotation.y = t * 0.18;
-      clouds.rotation.y = t * 0.22;
+      // Make rotation extremely obvious
+      earth.rotation.y = elapsed * 5.0; // much faster
+      clouds.rotation.y = elapsed * 6.0;
 
-      const issAngle = t * 1.2;
+      const issAngle = elapsed * 2.5;
       iss.position.set(
         ISS_RADIUS * Math.cos(issAngle),
         ISS_RADIUS * Math.sin(issAngle) * Math.sin(ISS_INCLINATION),

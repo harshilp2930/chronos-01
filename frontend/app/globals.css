@@ -151,7 +151,7 @@
 .dark, :root {
   --background:           #080E1A;
   --foreground:           #F0F4FF;
-  --card:                 rgba(15,25,35,0.45);
+  --card:                 #0F1923;
   --card-foreground:      #F0F4FF;
   --popover:              #131F2E;
   --popover-foreground:   #F0F4FF;
