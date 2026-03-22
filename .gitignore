@@ -7,7 +7,6 @@ Thumbs.db
 # Environment files
 .env
 .env.*
-!.env.example
 
 # Ignore backend environment secrets
 backend/.env
