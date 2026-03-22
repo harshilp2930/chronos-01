@@ -52,15 +52,15 @@ Weather Data -> ML Assessment -> Rule Validation -> GO / NO-GO Decision
 
 ## Key Features
 
-| Feature | Description |
-|---|---|
-| Hybrid ML Model | Random Forest based scrub-risk prediction pipeline (`ml/step1..3`) |
-| Real-Time Prediction API | `POST /api/v1/scrub/predict` with typed validation and risk response |
-| Mission Management | Full mission lifecycle (create, update, submit, approve, reject, export PDF) |
-| Role-Based Access | JWT auth with officer/planner/individual flows |
-| Physics Tooling | Lambert solver, propagation, safety-zone checks, optimization endpoints |
-| 3D UI Experience | Next.js + Three.js visuals (Earth/solar system effects and dashboards) |
-| Launch-Site Coverage | `sdsc`, `vssc`, `aki` support in weather/scrub flow |
+| Feature                  | Description                                                                  |
+| ------------------------ | ---------------------------------------------------------------------------- |
+| Hybrid ML Model          | Random Forest based scrub-risk prediction pipeline (`ml/step1..3`)           |
+| Real-Time Prediction API | `POST /api/v1/scrub/predict` with typed validation and risk response         |
+| Mission Management       | Full mission lifecycle (create, update, submit, approve, reject, export PDF) |
+| Role-Based Access        | JWT auth with officer/planner/individual flows                               |
+| Physics Tooling          | Lambert solver, propagation, safety-zone checks, optimization endpoints      |
+| 3D UI Experience         | Next.js + Three.js visuals (Earth/solar system effects and dashboards)       |
+| Launch-Site Coverage     | `sdsc`, `vssc`, `aki` support in weather/scrub flow                          |
 
 ---
 
@@ -68,13 +68,13 @@ Weather Data -> ML Assessment -> Rule Validation -> GO / NO-GO Decision
 
 <div align="center">
 
-| Metric | Score |
-|:---:|:---:|
-| Test Accuracy | 95.01% |
-| ROC-AUC | 0.9551 |
-| Avg Precision | 0.9550 |
-| F1 Macro | 0.9451 |
-| CV Stability | +/-0.008 |
+|    Metric     |  Score   |
+| :-----------: | :------: |
+| Test Accuracy |  95.01%  |
+|    ROC-AUC    |  0.9551  |
+| Avg Precision |  0.9550  |
+|   F1 Macro    |  0.9451  |
+| CV Stability  | +/-0.008 |
 
 </div>
 
@@ -221,11 +221,11 @@ Request body:
 
 ## Launch Sites
 
-| Site ID | Name | Coordinates |
-|:---:|---|:---:|
-| `sdsc` | Satish Dhawan Space Centre (Sriharikota) | 13.7N, 80.2E |
-| `vssc` | Vikram Sarabhai Space Centre (Trivandrum) | 8.5N, 76.9E |
-| `aki` | Abdul Kalam Island | 15.1N, 82.9E |
+| Site ID | Name                                      | Coordinates  |
+| :-----: | ----------------------------------------- | :----------: |
+| `sdsc`  | Satish Dhawan Space Centre (Sriharikota)  | 13.7N, 80.2E |
+| `vssc`  | Vikram Sarabhai Space Centre (Trivandrum) | 8.5N, 76.9E  |
+|  `aki`  | Abdul Kalam Island                        | 15.1N, 82.9E |
 
 ---
 

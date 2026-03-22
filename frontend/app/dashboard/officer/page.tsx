@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import api from "@/lib/api";
-import { NoisePatternCard, StatTile } from "@/components/ui/card-with-noise-patter";
+import { NoisePatternCard, StatTile } from "@/components/ui/card-with-noise-pattern";
 import {
   Clock,
   CheckCircle2,

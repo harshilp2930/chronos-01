@@ -16,7 +16,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import api from "@/lib/api";
 import { Button } from "@/components/ui/button";
-import { NoisePatternCard } from "@/components/ui/card-with-noise-patter";
+import { NoisePatternCard } from "@/components/ui/card-with-noise-pattern";
 import { SafetyCanvas } from "@/components/planner/safety-canvas";
 import { WeatherGauge } from "@/components/planner/weather-gauge";
 

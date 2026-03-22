@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import api from "@/lib/api";
-import { NoisePatternCard } from "@/components/ui/card-with-noise-patter";
+import { NoisePatternCard } from "@/components/ui/card-with-noise-pattern";
 import { StatusBadge } from "@/components/planner/status-badge";
 
 interface Mission {
@@ -172,7 +172,7 @@ export default function MissionsPage() {
               <p className="text-sm" style={{ color: "rgba(240,244,255,0.4)" }}>No missions found.</p>
               {!search && !statusFilter && !targetFilter && (
                 <Link href="/dashboard/planner/missions/new" className="text-sm underline mt-1 block" style={{ color: "#00E5FF" }}>
-                  Create your first mission â†’
+                  Create your first mission →
                 </Link>
               )}
             </div>

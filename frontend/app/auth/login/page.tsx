@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/store/auth";
-import { NoisePatternCard } from "@/components/ui/card-with-noise-patter";
+import { NoisePatternCard } from "@/components/ui/card-with-noise-pattern";
 
 const loginSchema = z.object({
   email: z.string().email("Enter a valid email address"),

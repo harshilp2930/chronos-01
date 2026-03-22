@@ -19,7 +19,7 @@ export default function DotGridBackground({
   glowRadius = 120,
   glowColor = "79,142,247",
   dotColor = "255,255,255",
-  dotRadius = 1.3,
+  dotRadius = 0.2,
 }: DotGridBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef = useRef({ x: -9999, y: -9999 });

@@ -1,21 +1,23 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Github, Twitter, Rocket, Satellite, Globe } from "lucide-react";
 
 export default function Footer() {
-  const [stars, setStars] = useState<{ size: number; top: number; left: number; opacity: number }[]>([]);
+  const stars = Array.from({ length: 60 }, (_, i) => {
+    const seed = (i + 1) * 9973;
+    const frac = (n: number) => n - Math.floor(n);
+    const r1 = frac(Math.sin(seed * 0.123) * 43758.5453);
+    const r2 = frac(Math.sin(seed * 0.456) * 43758.5453);
+    const r3 = frac(Math.sin(seed * 0.789) * 43758.5453);
+    const r4 = frac(Math.sin(seed * 1.111) * 43758.5453);
 
-  useEffect(() => {
-    setStars(
-      Array.from({ length: 60 }, () => ({
-        size: Math.random() * 1.5 + 0.5,
-        top: Math.random() * 100,
-        left: Math.random() * 100,
-        opacity: Math.random() * 0.4 + 0.1,
-      }))
-    );
-  }, []);
+    return {
+      size: r1 * 1.5 + 0.5,
+      top: r2 * 100,
+      left: r3 * 100,
+      opacity: r4 * 0.4 + 0.1,
+    };
+  });
 
   return (
     <footer className="relative overflow-hidden border-t border-space-600">
@@ -41,7 +43,9 @@ export default function Footer() {
         <div className="mb-12 grid grid-cols-1 gap-12 md:grid-cols-3">
           <div>
             <div className="mb-3 flex items-center gap-2">
-              <span className="text-lg">🚀</span>
+              <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.02)]">
+                <Satellite size={14} className="text-neon-blue" />
+              </div>
               <span className="font-space font-bold text-white">
                 CHRONOS<span className="text-neon-blue">-1</span>
               </span>

@@ -9,7 +9,7 @@ import {
 } from "recharts";
 import type { PieLabelRenderProps } from "recharts";
 import { RefreshCw, TrendingUp, BarChart3, PieChart as PieIcon, Activity, Rocket, CheckCircle, XCircle } from "lucide-react";
-import { NoisePatternCard, StatTile } from "@/components/ui/card-with-noise-patter";
+import { NoisePatternCard, StatTile } from "@/components/ui/card-with-noise-pattern";
 
 interface AnalyticsData {
   total_missions: number;

@@ -14,7 +14,7 @@ import {
 import { motion } from "framer-motion";
 import api from "@/lib/api";
 import { StatusBadge } from "@/components/planner/status-badge";
-import { NoisePatternCard, StatTile } from "@/components/ui/card-with-noise-patter";
+import { NoisePatternCard, StatTile } from "@/components/ui/card-with-noise-pattern";
 
 interface Mission {
   id: string;

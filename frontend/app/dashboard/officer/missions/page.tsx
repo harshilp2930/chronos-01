@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import api from "@/lib/api";
 import { StatusBadge } from "@/components/planner/status-badge";
-import { NoisePatternCard } from "@/components/ui/card-with-noise-patter";
+import { NoisePatternCard } from "@/components/ui/card-with-noise-pattern";
 import {
   Search,
   Filter,

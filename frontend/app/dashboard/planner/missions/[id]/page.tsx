@@ -34,7 +34,7 @@ import {
 import api from "@/lib/api";
 import type { SolarSystemViewerProps } from "@/components/planner/solar-system";
 import { Button } from "@/components/ui/button";
-import { NoisePatternCard } from "@/components/ui/card-with-noise-patter";
+import { NoisePatternCard } from "@/components/ui/card-with-noise-pattern";
 import { StatusBadge } from "@/components/planner/status-badge";
 import { SafetyCanvas } from "@/components/planner/safety-canvas";
 import { WeatherGauge } from "@/components/planner/weather-gauge";

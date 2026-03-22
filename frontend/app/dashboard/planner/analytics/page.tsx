@@ -22,7 +22,7 @@ import { motion } from "framer-motion";
 import { Loader2, TrendingUp, Rocket, Zap, AlertTriangle, Clock } from "lucide-react";
 import api from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
-import { NoisePatternCard, StatTile } from "@/components/ui/card-with-noise-patter";
+import { NoisePatternCard, StatTile } from "@/components/ui/card-with-noise-pattern";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 

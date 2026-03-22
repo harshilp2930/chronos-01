@@ -20,7 +20,7 @@ import {
   Hourglass,
   Satellite,
 } from "lucide-react";
-import { NoisePatternCard } from "@/components/ui/card-with-noise-patter";
+import { NoisePatternCard } from "@/components/ui/card-with-noise-pattern";
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
