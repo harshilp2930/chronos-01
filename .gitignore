@@ -9,6 +9,9 @@ Thumbs.db
 .env.*
 !.env.example
 
+# Ignore backend environment secrets
+backend/.env
+
 # Python
 __pycache__/
 *.py[cod]
