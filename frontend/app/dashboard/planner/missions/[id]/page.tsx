@@ -34,7 +34,7 @@ import {
 import api from "@/lib/api";
 import type { SolarSystemViewerProps } from "@/components/planner/solar-system";
 import { Button } from "@/components/ui/button";
-import { NoisePatternCard } from "@/components/ui/card-with-noise-pattern";
+import { PremiumCard } from "@/components/ui/card-with-noise-pattern";
 import { StatusBadge } from "@/components/planner/status-badge";
 import { SafetyCanvas } from "@/components/planner/safety-canvas";
 import { WeatherGauge } from "@/components/planner/weather-gauge";
@@ -177,7 +177,7 @@ function SectionCard({
       transition={{ delay }}
       className="h-full"
     >
-      <NoisePatternCard className="h-full">
+      <PremiumCard className="h-full">
           <div className="p-6 pb-2">
             <h3 className="text-[13px] font-semibold uppercase tracking-[0.08em] flex items-center gap-2" style={{ color: "rgba(240,244,255,0.5)" }}>
               <Icon className={"w-4 h-4 "} style={{ color: iconColor }} />
@@ -186,7 +186,7 @@ function SectionCard({
             {subtitle && <p className="text-[11px] mt-1" style={{ color: "rgba(240,244,255,0.3)" }}>{subtitle}</p>}
           </div>
           <div className="px-6 pb-6">{children}</div>
-      </NoisePatternCard>
+      </PremiumCard>
     </motion.div>
   );
 }
@@ -214,21 +214,21 @@ function TrajectoryChart({ points }: { points: TrajectoryPoint[] }) {
         <AreaChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 20 }}>
           <defs>
             <linearGradient id="auGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%"  stopColor="#00E5FF" stopOpacity={0.2} />
+              <stop offset="0%"  stopColor="#00E5FF" stopOpacity={0.3} />
               <stop offset="100%" stopColor="#00E5FF" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="4 4" stroke="rgba(255,255,255,0.05)" vertical={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
           <XAxis
             dataKey="day"
-            tick={{ fill: "rgba(240,244,255,0.25)", fontSize: 10, fontFamily: "monospace" }}
-            axisLine={{ stroke: "rgba(255,255,255,0.05)" }}
+            tick={{ fill: "rgba(240,244,255,0.45)", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}
+            axisLine={false}
             tickLine={false}
-            label={{ value: "Days", position: "insideBottom", offset: -12, fill: "rgba(240,244,255,0.25)", fontSize: 10, fontFamily: "monospace" }}
+            label={{ value: "Days", position: "insideBottom", offset: -12, fill: "rgba(240,244,255,0.45)", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}
           />
           <YAxis
             domain={[minAu, maxAu]}
-            tick={{ fill: "rgba(240,244,255,0.25)", fontSize: 10, fontFamily: "monospace" }}
+            tick={{ fill: "rgba(240,244,255,0.45)", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}
             tickFormatter={(v: number) => v.toFixed(1) + " AU"}
             axisLine={false}
             tickLine={false}
@@ -239,18 +239,18 @@ function TrajectoryChart({ points }: { points: TrajectoryPoint[] }) {
             stroke="#F59E0B"
             strokeDasharray="6 3"
             strokeOpacity={0.45}
-            label={{ value: "1 AU", position: "insideTopLeft", fill: "#F59E0B", fontSize: 9, fontFamily: "monospace" }}
+            label={{ value: "1 AU", position: "insideTopLeft", fill: "#F59E0B", fontSize: 9, fontFamily: "'JetBrains Mono', monospace" }}
           />
           <Tooltip
-            contentStyle={{ background: "#0F1923", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 8, padding: "8px 12px" }}
-            labelStyle={{ color: "rgba(240,244,255,0.25)", fontSize: 10, fontFamily: "monospace", marginBottom: 4 }}
-            itemStyle={{ color: "#00E5FF", fontSize: 11, fontFamily: "monospace" }}
+            contentStyle={{ background: "rgba(15, 20, 30, 0.8)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "10px", padding: "8px 12px", boxShadow: "0 8px 32px rgba(0,0,0,0.4)" }}
+            labelStyle={{ color: "rgba(240,244,255,0.6)", fontSize: 10, fontFamily: "'JetBrains Mono', monospace", marginBottom: 4, fontWeight: 600 }}
+            itemStyle={{ color: "#00E5FF", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }}
             formatter={(v) => [(+(v ?? 0)).toFixed(4) + " AU", "Distance"] as [string, string]}
             labelFormatter={(l) => "Day " + l}
-            cursor={{ stroke: "#00E5FF", strokeWidth: 1, strokeDasharray: "4 2", strokeOpacity: 0.5 }}
+            cursor={{ stroke: "rgba(255,255,255,0.1)", strokeWidth: 1, strokeDasharray: "4 4" }}
           />
-          <Area type="monotone" dataKey="r_au" stroke="#00E5FF" strokeWidth={2} fill="url(#auGrad)"
-            dot={false} activeDot={{ r: 4, fill: "#00E5FF", strokeWidth: 0 }} />
+          <Area type="monotone" dataKey="r_au" stroke="#00E5FF" strokeWidth={2.5} fill="url(#auGrad)"
+            dot={false} activeDot={{ r: 6, fill: "#00E5FF", strokeWidth: 0 }} />
         </AreaChart>
       </ResponsiveContainer>
     </div>
@@ -638,7 +638,7 @@ export default function MissionDetailPage() {
 
       {/* 3D Solar System -- full width, 500px */}
       <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-        <NoisePatternCard>
+        <PremiumCard>
             <div className="p-6 pb-2">
               <h3 className="text-[13px] font-semibold uppercase tracking-[0.08em] flex items-center gap-2" style={{ color: "rgba(240,244,255,0.5)" }}>
                 <ZoomIn className="w-4 h-4" style={{ color: "#00E5FF" }} />
@@ -656,7 +656,7 @@ export default function MissionDetailPage() {
                 height={500}
               />
             </div>
-        </NoisePatternCard>
+        </PremiumCard>
       </motion.div>
 
       {/* Main data grid — 2 cols on large screens */}

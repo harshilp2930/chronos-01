@@ -9,7 +9,7 @@ import {
 } from "recharts";
 import type { PieLabelRenderProps } from "recharts";
 import { RefreshCw, TrendingUp, BarChart3, PieChart as PieIcon, Activity, Rocket, CheckCircle, XCircle } from "lucide-react";
-import { NoisePatternCard, StatTile } from "@/components/ui/card-with-noise-pattern";
+import { PremiumCard, StatTile } from "@/components/ui/card-with-noise-pattern";
 
 interface AnalyticsData {
   total_missions: number;
@@ -35,23 +35,30 @@ const REJECT_COLOR  = "#FF3B5C";
 const PENDING_COLOR = "#F59E0B";
 const DRAFT_COLOR   = "rgba(240,244,255,0.2)";
 
+const TOOLTIP_STYLE = {
+  contentStyle: { background: "rgba(15, 20, 30, 0.8)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "10px", color: "#F0F4FF", boxShadow: "0 8px 32px rgba(0,0,0,0.4)", fontSize: "12px", fontFamily: "'JetBrains Mono', monospace" },
+  itemStyle: { color: "rgba(240,244,255,0.6)", fontFamily: "'JetBrains Mono', monospace" },
+  labelStyle: { color: "#F0F4FF", fontWeight: 600, fontFamily: "'JetBrains Mono', monospace" },
+  cursor: { fill: "rgba(0,229,255,0.04)" }
+};
+
 function ChartCard({ title, icon: Icon, children }: { title: string; icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>; children: React.ReactNode }) {
   return (
-    <NoisePatternCard>
-        <div className="rounded-xl p-5">
-          <div className="flex items-center gap-2 mb-5">
+    <PremiumCard>
+        <div className="rounded-xl p-6 overflow-hidden">
+          <div className="flex items-center gap-2 mb-6">
             <Icon className="w-4 h-4" style={{ color: "#00E5FF" } as React.CSSProperties} />
-            <h3 className="text-[13px] font-semibold uppercase tracking-[0.08em]" style={{ color: "rgba(240,244,255,0.5)" }}>{title}</h3>
+            <h3 className="text-[12px] font-bold uppercase tracking-[0.15em]" style={{ color: "rgba(240,244,255,0.7)" }}>{title}</h3>
           </div>
           {children}
         </div>
-    </NoisePatternCard>
+    </PremiumCard>
   );
 }
 
 const renderDonutLabel = ({ name, percent }: PieLabelRenderProps) =>
-  percent !== undefined && percent > 0.05
-    ? `${String(name)} ${(percent * 100).toFixed(0)}%`
+  percent !== undefined && percent > 0.08
+    ? `${(percent * 100).toFixed(0)}%`
     : null;
 
 export default function OfficerAnalyticsPage() {
@@ -137,19 +144,19 @@ export default function OfficerAnalyticsPage() {
       {/* Row 1: Donut + planner performance table */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <ChartCard title="Approval Breakdown" icon={PieIcon}>
-          <ResponsiveContainer width="100%" height={260}>
-            <PieChart>
-              <Pie data={donutData} cx="50%" cy="50%" innerRadius={70} outerRadius={110}
-                dataKey="value" label={renderDonutLabel} labelLine={false}>
+          <ResponsiveContainer width="100%" height={280}>
+            <PieChart margin={{ top: 24, bottom: 24 }}>
+              <Pie data={donutData} cx="50%" cy="50%" innerRadius={58} outerRadius={84}
+                dataKey="value" label={renderDonutLabel} labelLine={false} stroke="none">
                 {donutData.map((d, i) => (
-                  <Cell key={i} fill={d.fill} />
+                  <Cell key={i} fill={d.fill} stroke="#080E1A" strokeWidth={2} />
                 ))}
               </Pie>
               <Tooltip
-                contentStyle={{ background: "#0F1923", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "8px", color: "#F0F4FF" }}
-                formatter={(v: number | undefined) => [v != null ? `${v}` : "", ""]}
+                {...TOOLTIP_STYLE}
+                formatter={(v: number | undefined, name: string | undefined) => [v != null ? `${v} missions` : "", name || ""]}
               />
-              <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: "11px", color: "rgba(240,244,255,0.4)" }} />
+              <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "11px", color: "rgba(240,244,255,0.4)", paddingTop: "8px" }} />
             </PieChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -157,11 +164,13 @@ export default function OfficerAnalyticsPage() {
         <ChartCard title="Planner Performance" icon={TrendingUp}>
           <div className="overflow-x-auto max-h-[260px] overflow-y-auto">
             <table className="w-full">
-              <thead className="sticky top-0" style={{ background: "#0F1923" }}>
-                <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                  {["Planner", "Sub.", "Appr.", "Rej.", "Rate"].map((h) => (
-                    <th key={h} className="text-left pb-1 pr-4 text-[11px] uppercase tracking-[0.08em] font-semibold" style={{ color: "rgba(240,244,255,0.35)" }}>{h}</th>
-                  ))}
+              <thead className="sticky top-0" style={{ background: "rgba(15,25,35,0.9)", backdropFilter: "blur(8px)" }}>
+                <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+                  <th className="text-left pb-3 pr-4 text-[10px] uppercase tracking-widest font-bold" style={{ color: "rgba(240,244,255,0.4)" }}>Planner</th>
+                  <th className="text-right pb-3 pr-4 text-[10px] uppercase tracking-widest font-bold" style={{ color: "rgba(240,244,255,0.4)" }}>Sub.</th>
+                  <th className="text-right pb-3 pr-4 text-[10px] uppercase tracking-widest font-bold" style={{ color: "rgba(240,244,255,0.4)" }}>Appr.</th>
+                  <th className="text-right pb-3 pr-4 text-[10px] uppercase tracking-widest font-bold" style={{ color: "rgba(240,244,255,0.4)" }}>Rej.</th>
+                  <th className="text-right pb-3 text-[10px] uppercase tracking-widest font-bold" style={{ color: "rgba(240,244,255,0.4)" }}>Rate</th>
                 </tr>
               </thead>
               <tbody>
@@ -169,15 +178,15 @@ export default function OfficerAnalyticsPage() {
                   <tr><td colSpan={5} className="py-6 text-center text-sm" style={{ color: "rgba(240,244,255,0.3)" }}>No data</td></tr>
                 ) : (
                   analytics.planner_performance.map((p) => (
-                    <tr key={p.planner_id} className="transition-colors duration-150" style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}
-                      onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(0,229,255,0.04)")}
+                    <tr key={p.planner_id} className="transition-all duration-200" style={{ borderBottom: "1px solid rgba(255,255,255,0.03)" }}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.02)")}
                       onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}>
-                      <td className="py-2 pr-4 text-[13px] font-semibold truncate max-w-[120px]" style={{ color: "#F0F4FF" }}>{p.planner_name}</td>
-                      <td className="py-2 pr-4 text-[13px] font-['JetBrains_Mono',monospace]" style={{ color: "rgba(240,244,255,0.6)" }}>{p.submitted}</td>
-                      <td className="py-2 pr-4 text-[13px] font-['JetBrains_Mono',monospace]" style={{ color: "#00C896" }}>{p.approved}</td>
-                      <td className="py-2 pr-4 text-[13px] font-['JetBrains_Mono',monospace]" style={{ color: "#FF3B5C" }}>{p.rejected}</td>
-                      <td className="py-2">
-                        <span className="font-['JetBrains_Mono',monospace] text-[11px] px-2 py-0.5 rounded-[999px] font-bold" style={{
+                      <td className="py-3.5 pr-4 text-[13px] font-bold truncate max-w-[120px]" style={{ color: "#F0F4FF" }}>{p.planner_name}</td>
+                      <td className="py-3.5 pr-4 text-right text-[13px] font-['JetBrains_Mono',monospace]" style={{ color: "rgba(240,244,255,0.6)" }}>{p.submitted}</td>
+                      <td className="py-3.5 pr-4 text-right text-[13px] font-['JetBrains_Mono',monospace]" style={{ color: "#00C896" }}>{p.approved}</td>
+                      <td className="py-3.5 pr-4 text-right text-[13px] font-['JetBrains_Mono',monospace]" style={{ color: "#FF3B5C" }}>{p.rejected}</td>
+                      <td className="py-3.5 text-right">
+                        <span className="font-['JetBrains_Mono',monospace] text-[11px] px-2 py-0.5 rounded-[999px] font-bold inline-block min-w-[36px] text-center" style={{
                           background: p.approval_rate >= 70 ? "rgba(0,200,150,0.12)" : p.approval_rate >= 40 ? "rgba(245,158,11,0.12)" : "rgba(255,59,92,0.12)",
                           color: p.approval_rate >= 70 ? "#00C896" : p.approval_rate >= 40 ? "#F59E0B" : "#FF3B5C",
                         }}>
@@ -200,15 +209,15 @@ export default function OfficerAnalyticsPage() {
             <div className="h-[240px] flex items-center justify-center text-sm" style={{ color: "rgba(240,244,255,0.3)" }}>No data</div>
           ) : (
             <ResponsiveContainer width="100%" height={240}>
-              <BarChart data={vehicleData} barCategoryGap="30%">
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                <XAxis dataKey="name" tick={{ fill: "rgba(240,244,255,0.25)", fontSize: 11 }} />
-                <YAxis tick={{ fill: "rgba(240,244,255,0.25)", fontSize: 11 }} allowDecimals={false} />
-                <Tooltip contentStyle={{ background: "#0F1923", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "8px", color: "#F0F4FF" }} />
-                <Legend iconType="square" iconSize={8} wrapperStyle={{ fontSize: "11px", color: "rgba(240,244,255,0.4)" }} />
-                <Bar dataKey="Approved" fill={APPROVE_COLOR} radius={[3, 3, 0, 0]} />
-                <Bar dataKey="Rejected" fill={REJECT_COLOR}  radius={[3, 3, 0, 0]} />
-                <Bar dataKey="Pending"  fill={PENDING_COLOR} radius={[3, 3, 0, 0]} />
+              <BarChart data={vehicleData} barCategoryGap="20%" margin={{ top: 24, right: 16 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
+                <XAxis dataKey="name" tick={{ fill: "rgba(240,244,255,0.45)", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: "rgba(240,244,255,0.45)", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }} allowDecimals={false} axisLine={false} tickLine={false} />
+                <Tooltip {...TOOLTIP_STYLE} cursor={{ fill: "rgba(255,255,255,0.02)" }} />
+                <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "11px", color: "rgba(240,244,255,0.4)" }} />
+                <Bar dataKey="Approved" fill={APPROVE_COLOR} radius={[4, 4, 0, 0]} />
+                <Bar dataKey="Rejected" fill={REJECT_COLOR}  radius={[4, 4, 0, 0]} />
+                <Bar dataKey="Pending"  fill={PENDING_COLOR} radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           )}
@@ -219,15 +228,15 @@ export default function OfficerAnalyticsPage() {
             <div className="h-[240px] flex items-center justify-center text-sm" style={{ color: "rgba(240,244,255,0.3)" }}>No data</div>
           ) : (
             <ResponsiveContainer width="100%" height={240}>
-              <BarChart data={targetData} barCategoryGap="30%">
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                <XAxis dataKey="name" tick={{ fill: "rgba(240,244,255,0.25)", fontSize: 11 }} />
-                <YAxis tick={{ fill: "rgba(240,244,255,0.25)", fontSize: 11 }} allowDecimals={false} />
-                <Tooltip contentStyle={{ background: "#0F1923", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "8px", color: "#F0F4FF" }} />
-                <Legend iconType="square" iconSize={8} wrapperStyle={{ fontSize: "11px", color: "rgba(240,244,255,0.4)" }} />
-                <Bar dataKey="Approved" fill={APPROVE_COLOR} radius={[3, 3, 0, 0]} />
-                <Bar dataKey="Rejected" fill={REJECT_COLOR}  radius={[3, 3, 0, 0]} />
-                <Bar dataKey="Pending"  fill={PENDING_COLOR} radius={[3, 3, 0, 0]} />
+              <BarChart data={targetData} barCategoryGap="20%" margin={{ top: 24, right: 16 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
+                <XAxis dataKey="name" tick={{ fill: "rgba(240,244,255,0.45)", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: "rgba(240,244,255,0.45)", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }} allowDecimals={false} axisLine={false} tickLine={false} />
+                <Tooltip {...TOOLTIP_STYLE} cursor={{ fill: "rgba(255,255,255,0.02)" }} />
+                <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "11px", color: "rgba(240,244,255,0.4)" }} />
+                <Bar dataKey="Approved" fill={APPROVE_COLOR} radius={[4, 4, 0, 0]} />
+                <Bar dataKey="Rejected" fill={REJECT_COLOR}  radius={[4, 4, 0, 0]} />
+                <Bar dataKey="Pending"  fill={PENDING_COLOR} radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           )}
@@ -240,18 +249,18 @@ export default function OfficerAnalyticsPage() {
           <div className="h-[240px] flex items-center justify-center text-sm" style={{ color: "rgba(240,244,255,0.3)" }}>No data</div>
         ) : (
           <ResponsiveContainer width="100%" height={240}>
-            <AreaChart data={monthlyData}>
+            <AreaChart data={monthlyData} margin={{ top: 24, right: 16 }}>
               <defs>
                 <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%"  stopColor="#00E5FF" stopOpacity={0.25} />
-                  <stop offset="95%" stopColor="#00E5FF" stopOpacity={0.02} />
+                  <stop offset="5%"  stopColor="#00E5FF" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#00E5FF" stopOpacity={0.0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-              <XAxis dataKey="month" tick={{ fill: "rgba(240,244,255,0.25)", fontSize: 11 }} />
-              <YAxis tick={{ fill: "rgba(240,244,255,0.25)", fontSize: 11 }} allowDecimals={false} />
-              <Tooltip contentStyle={{ background: "#0F1923", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "8px", color: "#F0F4FF" }} />
-              <Area type="monotone" dataKey="count" stroke="#00E5FF" strokeWidth={2} fill="url(#areaGrad)" name="Missions" />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
+              <XAxis dataKey="month" tick={{ fill: "rgba(240,244,255,0.45)", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: "rgba(240,244,255,0.45)", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }} allowDecimals={false} axisLine={false} tickLine={false} />
+              <Tooltip {...TOOLTIP_STYLE} cursor={{ stroke: "rgba(255,255,255,0.1)", strokeWidth: 1, strokeDasharray: "4 4" }} />
+              <Area type="monotone" dataKey="count" stroke="#00E5FF" strokeWidth={2.5} fill="url(#areaGrad)" name="Missions" activeDot={{ r: 6, fill: "#00E5FF", strokeWidth: 0 }} />
             </AreaChart>
           </ResponsiveContainer>
         )}

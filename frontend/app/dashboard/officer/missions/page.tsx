@@ -4,12 +4,13 @@ import { useEffect, useState, useCallback, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import api from "@/lib/api";
 import { StatusBadge } from "@/components/planner/status-badge";
-import { NoisePatternCard } from "@/components/ui/card-with-noise-pattern";
+import { PremiumCard } from "@/components/ui/card-with-noise-pattern";
 import {
   Search,
   Filter,
   Eye,
   RefreshCw,
+  ChevronRight,
   ChevronUp,
   ChevronDown,
 } from "lucide-react";
@@ -203,11 +204,11 @@ function MissionsContent() {
       </p>
 
       {/* Table */}
-      <NoisePatternCard>
+      <PremiumCard>
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full min-w-[800px]">
             <thead>
-              <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+              <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
                 {([
                   ["title",        "Mission"],
                   ["planner_name", "Planner"],
@@ -218,15 +219,15 @@ function MissionsContent() {
                 ] as [SortKey, string][]).map(([key, label]) => (
                   <th key={key}
                     onClick={() => toggleSort(key)}
-                    className="text-left px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] cursor-pointer select-none whitespace-nowrap transition-colors"
-                    style={{ color: sortKey === key ? "#F0F4FF" : "rgba(240,244,255,0.35)" }}
+                    className="text-left px-6 py-4 text-[10px] uppercase font-bold tracking-widest cursor-pointer select-none whitespace-nowrap transition-colors"
+                    style={{ color: sortKey === key ? "#F0F4FF" : "rgba(240,244,255,0.4)" }}
                   >
                     {label} <SortIcon col={key} />
                   </th>
                 ))}
                 <th
-                  className="text-left px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.08em]"
-                  style={{ color: "rgba(240,244,255,0.35)" }}
+                  className="text-left px-6 py-4 text-[10px] uppercase font-bold tracking-widest whitespace-nowrap"
+                  style={{ color: "rgba(240,244,255,0.4)" }}
                 >
                   Action
                 </th>
@@ -241,38 +242,42 @@ function MissionsContent() {
                 sorted.map((m) => (
                   <tr
                     key={m.id}
-                    className="transition-colors duration-150"
-                    style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(0,229,255,0.04)")}
+                    className="group transition-all duration-200"
+                    style={{ borderBottom: "1px solid rgba(255,255,255,0.03)" }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.02)")}
                     onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                   >
-                    <td className="px-6 h-[52px]">
+                    <td className="px-6 py-4">
                       <p className="text-[14px] font-semibold max-w-[200px] truncate" style={{ color: "#F0F4FF" }}>{m.title}</p>
-                      <p className="text-xs font-['JetBrains_Mono',monospace]" style={{ color: "rgba(240,244,255,0.35)" }}>
+                      <p className="text-xs font-['JetBrains_Mono',monospace] mt-0.5" style={{ color: "rgba(240,244,255,0.4)" }}>
                         {m.vehicle_class?.toUpperCase()} · {m.orbit_type?.toUpperCase() ?? "—"}
                       </p>
                     </td>
-                    <td className="px-6 h-[52px] text-[14px]" style={{ color: "rgba(240,244,255,0.6)" }}>{m.planner_name}</td>
-                    <td className="px-6 h-[52px]"><StatusBadge status={m.status} /></td>
-                    <td className="px-6 h-[52px] font-['JetBrains_Mono',monospace] text-[13px] capitalize" style={{ color: "rgba(240,244,255,0.6)" }}>{m.target_body}</td>
-                    <td className="px-6 h-[52px] font-['JetBrains_Mono',monospace] text-[13px] whitespace-nowrap" style={{ color: "rgba(240,244,255,0.6)" }}>
+                    <td className="px-6 py-4 text-[14px] font-semibold" style={{ color: "rgba(240,244,255,0.7)" }}>{m.planner_name}</td>
+                    <td className="px-6 py-4"><StatusBadge status={m.status} /></td>
+                    <td className="px-6 py-4 font-['JetBrains_Mono',monospace] text-[13px] capitalize" style={{ color: "rgba(240,244,255,0.6)" }}>{m.target_body}</td>
+                    <td className="px-6 py-4 font-['JetBrains_Mono',monospace] text-[13px] whitespace-nowrap" style={{ color: "rgba(240,244,255,0.6)" }}>
                       {m.submitted_at ? new Date(m.submitted_at).toLocaleDateString() : "—"}
                     </td>
-                    <td className="px-6 h-[52px] font-['JetBrains_Mono',monospace] text-[13px] whitespace-nowrap" style={{ color: "rgba(240,244,255,0.6)" }}>
+                    <td className="px-6 py-4 font-['JetBrains_Mono',monospace] text-[13px] whitespace-nowrap" style={{ color: "rgba(240,244,255,0.6)" }}>
                       {new Date(m.created_at).toLocaleDateString()}
                     </td>
-                    <td className="px-6 h-[52px]">
+                    <td className="px-6 py-4 text-right">
                       <button
                         onClick={() => router.push(`/dashboard/officer/missions/${m.id}`)}
-                        className="flex items-center gap-1.5 px-3 h-8 rounded-lg text-xs font-semibold transition-all duration-150"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-all shadow-sm whitespace-nowrap"
                         style={{
-                          background: m.status === "pending_approval" ? "#00E5FF" : "transparent",
+                          background: m.status === "pending_approval" ? "#00E5FF" : "rgba(0,229,255,0.08)",
                           color: m.status === "pending_approval" ? "#080E1A" : "#00E5FF",
-                          border: m.status === "pending_approval" ? "none" : "1px solid rgba(0,229,255,0.3)",
+                        }}
+                        onMouseEnter={(e) => {
+                          if (m.status !== "pending_approval") e.currentTarget.style.background = "rgba(0,229,255,0.15)";
+                        }}
+                        onMouseLeave={(e) => {
+                          if (m.status !== "pending_approval") e.currentTarget.style.background = "rgba(0,229,255,0.08)";
                         }}
                       >
-                        <Eye className="w-3 h-3" />
-                        {m.status === "pending_approval" ? "Review" : "View"}
+                        {m.status === "pending_approval" ? "Review" : "View"} <ChevronRight className="w-3.5 h-3.5" />
                       </button>
                     </td>
                   </tr>
@@ -281,7 +286,7 @@ function MissionsContent() {
             </tbody>
           </table>
         </div>
-      </NoisePatternCard>
+      </PremiumCard>
     </div>
   );
 }

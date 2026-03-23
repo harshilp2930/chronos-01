@@ -441,14 +441,14 @@ def main() -> None:
             email="admin@chronos.dev",
             full_name="System Admin",
             role="officer",
-            password="admin123",
+            password="Admin123",
         )
         planner = upsert_user(
             db,
             email="planner@chronos.dev",
             full_name="Mission Planner One",
             role="planner",
-            password="planner123",
+            password="Planner123",
             created_by=officer.id,
         )
         planner2 = upsert_user(
@@ -456,7 +456,7 @@ def main() -> None:
             email="planner2@chronos.dev",
             full_name="Mission Planner Two",
             role="planner",
-            password="planner234",
+            password="Planner234",
             created_by=officer.id,
         )
         individual = upsert_user(
@@ -464,7 +464,7 @@ def main() -> None:
             email="individual@chronos.dev",
             full_name="Independent Operator",
             role="individual",
-            password="individual123",
+            password="Individual123",
         )
 
         records = mission_payloads(planner.id, planner2.id, individual.id, officer.id)
@@ -473,10 +473,10 @@ def main() -> None:
 
         total_missions = db.query(Mission).count()
         print("[ok] Demo users ready:")
-        print("     officer  : admin@chronos.dev / admin123")
-        print("     planner  : planner@chronos.dev / planner123")
-        print("     planner2 : planner2@chronos.dev / planner234")
-        print("     individual: individual@chronos.dev / individual123")
+        print("     officer  : admin@chronos.dev / Admin123")
+        print("     planner  : planner@chronos.dev / Planner123")
+        print("     planner2 : planner2@chronos.dev / Planner234")
+        print("     individual: individual@chronos.dev / Individual123")
         print(f"[ok] Seeded/updated {len(records)} demo missions")
         print(f"[ok] Database mission total: {total_missions}")
     finally:

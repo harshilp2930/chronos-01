@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Loader2, UserPlus, Shield, Map, User, Eye, EyeOff } from "lucide-react";
-import { NoisePatternCard } from "@/components/ui/card-with-noise-pattern";
+import { PremiumCard } from "@/components/ui/card-with-noise-pattern";
 import {
   Form,
   FormControl,
@@ -119,7 +119,7 @@ export default function RegisterPage() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
-      <NoisePatternCard>
+      <PremiumCard>
           <div className="space-y-1 p-8 pb-6">
             <h2 className="text-[24px] font-bold tracking-tight" style={{ color: "#F0F4FF" }}>Create account</h2>
             <p className="text-[13px] font-['JetBrains_Mono',monospace]" style={{ color: "rgba(240,244,255,0.4)" }}>Join CHRONOS-1 to start planning missions</p>
@@ -303,7 +303,7 @@ export default function RegisterPage() {
               <Link href="/auth/login" className="font-medium transition-all" style={{ color: "#00E5FF" }}>Sign in</Link>
             </p>
           </div>
-      </NoisePatternCard>
+      </PremiumCard>
     </motion.div>
   );
 }

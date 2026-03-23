@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/store/auth";
-import { NoisePatternCard } from "@/components/ui/card-with-noise-pattern";
+import { PremiumCard } from "@/components/ui/card-with-noise-pattern";
 
 const loginSchema = z.object({
   email: z.string().email("Enter a valid email address"),
@@ -93,7 +93,7 @@ export default function LoginPage() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
-      <NoisePatternCard>
+      <PremiumCard>
           {/* Header */}
           <div className="space-y-1 p-8 pb-6">
             <h2 className="text-[24px] font-bold tracking-tight" style={{ color: "#F0F4FF" }}>Welcome back</h2>
@@ -108,7 +108,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   disabled={isLoading}
-                  onClick={() => fastLogin("admin@chronos.dev", "admin123")}
+                  onClick={() => fastLogin("admin@chronos.dev", "Admin123")}
                   className="h-9 rounded-lg text-sm font-medium transition-all duration-200 disabled:opacity-50"
                   style={{ border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", color: "rgba(240,244,255,0.7)" }}
                   onMouseEnter={(e) => (e.currentTarget.style.color = "#F0F4FF")}
@@ -119,7 +119,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   disabled={isLoading}
-                  onClick={() => fastLogin("planner@chronos.dev", "planner123")}
+                  onClick={() => fastLogin("planner@chronos.dev", "Planner123")}
                   className="h-9 rounded-lg text-sm font-medium transition-all duration-200 disabled:opacity-50"
                   style={{ border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", color: "rgba(240,244,255,0.7)" }}
                   onMouseEnter={(e) => (e.currentTarget.style.color = "#F0F4FF")}
@@ -236,7 +236,7 @@ export default function LoginPage() {
               </Link>
             </p>
           </div>
-      </NoisePatternCard>
+      </PremiumCard>
     </motion.div>
   );
 }

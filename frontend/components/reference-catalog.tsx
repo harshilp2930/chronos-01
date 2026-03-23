@@ -20,7 +20,7 @@ import {
   Hourglass,
   Satellite,
 } from "lucide-react";
-import { NoisePatternCard } from "@/components/ui/card-with-noise-pattern";
+import { PremiumCard } from "@/components/ui/card-with-noise-pattern";
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
@@ -322,7 +322,7 @@ export function ReferenceCatalog() {
       <Section title="Target Bodies" icon={Globe2} accent="#00E5FF" delay={0.05}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {TARGET_BODIES.map((body) => (
-            <NoisePatternCard key={body.id}>
+            <PremiumCard key={body.id}>
               <div className="p-5 space-y-4">
                 <div className="flex items-center gap-3">
                   <div
@@ -345,7 +345,7 @@ export function ReferenceCatalog() {
                   {body.description}
                 </p>
               </div>
-            </NoisePatternCard>
+            </PremiumCard>
           ))}
         </div>
       </Section>
@@ -354,7 +354,7 @@ export function ReferenceCatalog() {
       <Section title="Launch Pads" icon={MapPin} accent="#00C896" delay={0.1}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {LAUNCH_PADS.map((pad) => (
-            <NoisePatternCard key={pad.id}>
+            <PremiumCard key={pad.id}>
               <div className="p-5 space-y-4">
                 <div>
                   <div className="flex items-center gap-2 mb-0.5">
@@ -377,7 +377,7 @@ export function ReferenceCatalog() {
                   {pad.description}
                 </p>
               </div>
-            </NoisePatternCard>
+            </PremiumCard>
           ))}
         </div>
       </Section>
@@ -386,7 +386,7 @@ export function ReferenceCatalog() {
       <Section title="Vehicle Classes" icon={Rocket} accent="#0066FF" delay={0.15}>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {VEHICLES.map((v) => (
-            <NoisePatternCard key={v.id}>
+            <PremiumCard key={v.id}>
               <div className="p-5 space-y-4">
                 <div className="flex items-start justify-between gap-2">
                   <h3 className="text-[14px] font-semibold leading-snug" style={{ color: "#F0F4FF" }}>
@@ -409,7 +409,7 @@ export function ReferenceCatalog() {
                   {v.description}
                 </p>
               </div>
-            </NoisePatternCard>
+            </PremiumCard>
           ))}
         </div>
       </Section>
@@ -418,7 +418,7 @@ export function ReferenceCatalog() {
       <Section title="Orbit Types" icon={Orbit} accent="#8B5CF6" delay={0.2}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {ORBITS.map((o) => (
-            <NoisePatternCard key={o.id}>
+            <PremiumCard key={o.id}>
               <div className="p-5 space-y-4">
                 <div className="flex items-center gap-3">
                   <div
@@ -441,7 +441,7 @@ export function ReferenceCatalog() {
                   {o.description}
                 </p>
               </div>
-            </NoisePatternCard>
+            </PremiumCard>
           ))}
         </div>
       </Section>

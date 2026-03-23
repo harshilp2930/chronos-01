@@ -1,70 +1,47 @@
 import React from "react";
-import { FaRocket, FaClock, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { Rocket, CheckCircle2, XCircle, TrendingUp } from "lucide-react";
+import { StatTile } from "@/components/ui/card-with-noise-pattern";
+import { motion } from "framer-motion";
 
 interface MissionStatsCardsProps {
   totalMissions: number;
-  pending: number;
   approved: number;
   rejected: number;
+  approvalRate: number;
+  loading?: boolean;
 }
 
 export default function MissionStatsCards({
   totalMissions,
-  pending,
   approved,
   rejected,
+  approvalRate,
+  loading = false,
 }: MissionStatsCardsProps) {
-  const stats = [
-    {
-      label: "TOTAL MISSIONS",
-      value: totalMissions,
-      icon: FaRocket,
-      iconColor: "#00E6FF",
-      textColor: "#00E6FF",
-      iconBg: "rgba(0,230,255,0.12)",
-    },
-    {
-      label: "PENDING APPROVAL",
-      value: pending,
-      icon: FaClock,
-      iconColor: "#F5A623",
-      textColor: "#F5A623",
-      iconBg: "rgba(245,166,35,0.12)",
-    },
-    {
-      label: "APPROVED",
-      value: approved,
-      icon: FaCheckCircle,
-      iconColor: "#00C896",
-      textColor: "#00C896",
-      iconBg: "rgba(0,200,150,0.12)",
-    },
-    {
-      label: "REJECTED",
-      value: rejected,
-      icon: FaTimesCircle,
-      iconColor: "#FF4D6D",
-      textColor: "#FF4D6D",
-      iconBg: "rgba(255,77,109,0.12)",
-    },
-  ];
+  const STAT_CARDS = [
+    { key: "total", label: "Total Missions", value: totalMissions, icon: Rocket, accent: "#00E5FF" },
+    { key: "approved", label: "Approved", value: approved, icon: CheckCircle2, accent: "#00C896" },
+    { key: "rejected", label: "Rejected", value: rejected, icon: XCircle, accent: "#FF3B5C" },
+    { key: "rate", label: "Approval Rate", value: `${approvalRate}%`, icon: TrendingUp, accent: "#3B82F6" },
+  ] as const;
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-6 w-full">
-      {stats.map(({ label, value, icon: Icon, iconColor, textColor, iconBg }) => (
-        <div
-          key={label}
-          className="flex flex-row items-center min-w-45 max-w-80 bg-card border border-border rounded-2xl shadow-sm px-5 py-2"
-          style={{ minHeight: 90 }}
+      {STAT_CARDS.map((card, i) => (
+        <motion.div
+          key={card.key}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: i * 0.08 }}
         >
-          <div className="flex items-center justify-center w-12 h-12 rounded-full mr-4" style={{ background: iconBg }}>
-            <Icon size={28} color={iconColor} />
-          </div>
-          <div className="flex flex-col flex-1">
-            <span className="text-2xl font-normal leading-tight" style={{ color: textColor }}>{value}</span>
-            <span className="text-xs font-medium text-muted-foreground tracking-wide mt-0 uppercase">{label}</span>
-          </div>
-        </div>
+          <StatTile
+            icon={card.icon}
+            label={card.label}
+            value={card.value}
+            accent={card.accent}
+            loading={loading}
+          />
+        </motion.div>
       ))}
     </div>
   );

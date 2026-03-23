@@ -10,7 +10,6 @@ import {
   History,
   BarChart3,
   LogOut,
-  Moon,
   ChevronDown,
   Menu,
   X,
@@ -85,14 +84,6 @@ export function PlannerNavbar() {
 
         {/* Right side */}
         <div className="flex items-center gap-2 shrink-0">
-
-          {/* Moon icon (static dark mode indicator) */}
-          <button
-            className="w-8 h-8 flex items-center justify-center rounded-lg transition-colors hover:bg-[rgba(255,255,255,0.05)]"
-            title="Dark mode active"
-          >
-            <Moon className="w-4 h-4" style={{ color: "rgba(240,244,255,0.5)" }} />
-          </button>
 
           {/* Avatar dropdown */}
           <div className="relative">

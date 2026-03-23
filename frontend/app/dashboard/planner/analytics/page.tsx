@@ -22,7 +22,7 @@ import { motion } from "framer-motion";
 import { Loader2, TrendingUp, Rocket, Zap, AlertTriangle, Clock } from "lucide-react";
 import api from "@/lib/api";
 import { useAuthStore } from "@/store/auth";
-import { NoisePatternCard, StatTile } from "@/components/ui/card-with-noise-pattern";
+import { PremiumCard, StatTile } from "@/components/ui/card-with-noise-pattern";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -51,16 +51,10 @@ const PALETTE = ["#00E5FF", "#0066FF", "#F59E0B", "#00C896", "#FF3B5C", "#8B5CF6
 // ── Tooltip styles ────────────────────────────────────────────────────────────
 
 const TOOLTIP_STYLE = {
-  contentStyle: {
-    background:   "#0F1923",
-    border:       "1px solid rgba(255,255,255,0.06)",
-    borderRadius: "10px",
-    color:        "#F0F4FF",
-    fontSize:     "12px",
-  },
-  itemStyle:  { color: "rgba(240,244,255,0.5)" },
-  labelStyle: { color: "#F0F4FF", fontWeight: 600 },
-  cursor:     { fill: "rgba(0,229,255,0.04)" },
+  contentStyle: { background: "rgba(15, 20, 30, 0.8)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "10px", color: "#F0F4FF", boxShadow: "0 8px 32px rgba(0,0,0,0.4)", fontSize: "12px", fontFamily: "'JetBrains Mono', monospace" },
+  itemStyle: { color: "rgba(240,244,255,0.6)", fontFamily: "'JetBrains Mono', monospace" },
+  labelStyle: { color: "#F0F4FF", fontWeight: 600, fontFamily: "'JetBrains Mono', monospace" },
+  cursor: { fill: "rgba(0,229,255,0.04)" }
 };
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -209,7 +203,7 @@ export default function AnalyticsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <NoisePatternCard>
+          <PremiumCard>
               <div className="p-6 pb-0">
                 <h3 className="text-[13px] font-semibold uppercase tracking-[0.08em]" style={{ color: "rgba(240,244,255,0.5)" }}>Missions by Status</h3>
               </div>
@@ -220,20 +214,21 @@ export default function AnalyticsPage() {
                 </div>
               ) : (
                 <ResponsiveContainer width="100%" height={220}>
-                  <PieChart>
+                  <PieChart margin={{ top: 16, bottom: 16 }}>
                     <Pie
                       data={byStatusData}
                       cx="50%"
                       cy="50%"
                       innerRadius={55}
-                      outerRadius={90}
+                      outerRadius={85}
                       paddingAngle={3}
                       dataKey="value"
                       labelLine={false}
                       label={renderCustomLabel}
+                      stroke="none"
                     >
                       {byStatusData.map((entry) => (
-                        <Cell key={entry.name} fill={entry.fill} />
+                        <Cell key={entry.name} fill={entry.fill} stroke="#080E1A" strokeWidth={2} />
                       ))}
                     </Pie>
                     <Tooltip
@@ -243,7 +238,7 @@ export default function AnalyticsPage() {
                     <Legend
                       iconType="circle"
                       iconSize={8}
-                      wrapperStyle={{ fontSize: "11px", color: "#94a3b8" }}
+                      wrapperStyle={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "11px", color: "rgba(240,244,255,0.4)" }}
                       formatter={(value) =>
                         value.charAt(0).toUpperCase() + value.slice(1)
                       }
@@ -252,7 +247,7 @@ export default function AnalyticsPage() {
                 </ResponsiveContainer>
               )}
               </div>
-          </NoisePatternCard>
+          </PremiumCard>
         </motion.div>
 
         {/* Bar — missions by target body */}
@@ -261,7 +256,7 @@ export default function AnalyticsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35 }}
         >
-          <NoisePatternCard>
+          <PremiumCard>
               <div className="p-6 pb-0">
                 <h3 className="text-[13px] font-semibold uppercase tracking-[0.08em]" style={{ color: "rgba(240,244,255,0.5)" }}>Missions by Target Body</h3>
               </div>
@@ -272,22 +267,23 @@ export default function AnalyticsPage() {
                 </div>
               ) : (
                 <ResponsiveContainer width="100%" height={220}>
-                  <BarChart data={byTargetData} barSize={36}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                  <BarChart data={byTargetData} barSize={36} barCategoryGap="20%" margin={{ top: 24, right: 16 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
                     <XAxis
                       dataKey="name"
-                      tick={{ fill: "rgba(240,244,255,0.25)", fontSize: 11 }}
+                      tick={{ fill: "rgba(240,244,255,0.45)", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }}
                       axisLine={false}
                       tickLine={false}
                     />
                     <YAxis
                       allowDecimals={false}
-                      tick={{ fill: "rgba(240,244,255,0.25)", fontSize: 11 }}
+                      tick={{ fill: "rgba(240,244,255,0.45)", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }}
                       axisLine={false}
                       tickLine={false}
                     />
                     <Tooltip
                       {...TOOLTIP_STYLE}
+                      cursor={{ fill: "rgba(255,255,255,0.02)" }}
                       formatter={(v) => [`${v ?? 0} missions`, "Missions"]}
                     />
                     <Bar dataKey="missions" radius={[4, 4, 0, 0]}>
@@ -299,7 +295,7 @@ export default function AnalyticsPage() {
                 </ResponsiveContainer>
               )}
               </div>
-          </NoisePatternCard>
+          </PremiumCard>
         </motion.div>
       </div>
 
@@ -312,7 +308,7 @@ export default function AnalyticsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.42 }}
         >
-          <NoisePatternCard>
+          <PremiumCard>
               <div className="p-6 pb-0">
                 <h3 className="text-[13px] font-semibold uppercase tracking-[0.08em] flex items-center gap-2" style={{ color: "rgba(240,244,255,0.5)" }}>
                   <TrendingUp className="w-4 h-4" style={{ color: "#0066FF" }} />
@@ -326,34 +322,34 @@ export default function AnalyticsPage() {
                 </div>
               ) : (
                 <ResponsiveContainer width="100%" height={220}>
-                  <LineChart data={deltaVData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                  <LineChart data={deltaVData} margin={{ top: 24, right: 16 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
                     <XAxis
                       dataKey="date"
-                      tick={{ fill: "rgba(240,244,255,0.25)", fontSize: 10 }}
+                      tick={{ fill: "rgba(240,244,255,0.45)", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}
                       axisLine={false}
                       tickLine={false}
                     />
                     <YAxis
-                      tick={{ fill: "rgba(240,244,255,0.25)", fontSize: 10 }}
+                      tick={{ fill: "rgba(240,244,255,0.45)", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}
                       axisLine={false}
                       tickLine={false}
                       domain={["auto", "auto"]}
                     />
-                    <Tooltip {...TOOLTIP_STYLE} />
+                    <Tooltip {...TOOLTIP_STYLE} cursor={{ stroke: "rgba(255,255,255,0.1)", strokeWidth: 1, strokeDasharray: "4 4" }} />
                     <Line
                       type="monotone"
                       dataKey="ΔV (km/s)"
                       stroke="#0066FF"
-                      strokeWidth={2}
-                      dot={{ fill: "#0066FF", r: 3 }}
-                      activeDot={{ r: 5, fill: "#00E5FF" }}
+                      strokeWidth={2.5}
+                      dot={{ fill: "#0066FF", r: 3, strokeWidth: 0 }}
+                      activeDot={{ r: 6, fill: "#00E5FF", strokeWidth: 0 }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
               )}
               </div>
-          </NoisePatternCard>
+          </PremiumCard>
         </motion.div>
 
         {/* Bar — scrub risk histogram */}
@@ -362,7 +358,7 @@ export default function AnalyticsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.48 }}
         >
-          <NoisePatternCard>
+          <PremiumCard>
               <div className="p-6 pb-0">
                 <h3 className="text-[13px] font-semibold uppercase tracking-[0.08em]" style={{ color: "rgba(240,244,255,0.5)" }}>Scrub Risk Distribution</h3>
               </div>
@@ -373,22 +369,23 @@ export default function AnalyticsPage() {
                 </div>
               ) : (
                 <ResponsiveContainer width="100%" height={220}>
-                  <BarChart data={histData} barSize={42}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                  <BarChart data={histData} barSize={42} barCategoryGap="20%" margin={{ top: 24, right: 16 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
                     <XAxis
                       dataKey="range"
-                      tick={{ fill: "rgba(240,244,255,0.25)", fontSize: 10 }}
+                      tick={{ fill: "rgba(240,244,255,0.45)", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}
                       axisLine={false}
                       tickLine={false}
                     />
                     <YAxis
                       allowDecimals={false}
-                      tick={{ fill: "rgba(240,244,255,0.25)", fontSize: 10 }}
+                      tick={{ fill: "rgba(240,244,255,0.45)", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}
                       axisLine={false}
                       tickLine={false}
                     />
                     <Tooltip
                       {...TOOLTIP_STYLE}
+                      cursor={{ fill: "rgba(255,255,255,0.02)" }}
                       formatter={(v) => [`${v ?? 0} missions`, "Count"]}
                     />
                     <Bar dataKey="count" fill="#00E5FF" radius={[4, 4, 0, 0]} opacity={0.85} />
@@ -396,7 +393,7 @@ export default function AnalyticsPage() {
                 </ResponsiveContainer>
               )}
               </div>
-          </NoisePatternCard>
+          </PremiumCard>
         </motion.div>
       </div>
     </div>

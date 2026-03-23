@@ -7,14 +7,14 @@ import Link from "next/link";
 import {
   Plus,
   Rocket,
-  Clock,
+  TrendingUp,
   CheckCircle2,
   XCircle,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import api from "@/lib/api";
 import { StatusBadge } from "@/components/planner/status-badge";
-import { NoisePatternCard, StatTile } from "@/components/ui/card-with-noise-pattern";
+import { PremiumCard, StatTile } from "@/components/ui/card-with-noise-pattern";
 
 interface Mission {
   id: string;
@@ -31,9 +31,9 @@ interface Mission {
 
 const STAT_CARDS = [
   { key: "total",    label: "Total Missions",   icon: Rocket,       accent: "#00E5FF" },
-  { key: "pending",  label: "Pending Approval", icon: Clock,        accent: "#F59E0B" },
   { key: "approved", label: "Approved",         icon: CheckCircle2, accent: "#00C896" },
   { key: "rejected", label: "Rejected",         icon: XCircle,      accent: "#FF3B5C" },
+  { key: "rate",     label: "Approval Rate",    icon: TrendingUp,   accent: "#3B82F6" },
 ] as const;
 
 export default function PlannerDashboard() {
@@ -52,11 +52,14 @@ export default function PlannerDashboard() {
       .finally(() => setLoading(false));
   }, [user, router]);
 
-  const stats = {
+  const totalProcessed = missions.filter((m) => m.status === "approved" || m.status === "rejected").length;
+  const rate = totalProcessed > 0 ? Math.round((missions.filter((m) => m.status === "approved").length / totalProcessed) * 100) : 0;
+  
+  const stats: Record<string, string | number> = {
     total:    missions.length,
-    pending:  missions.filter((m) => m.status === "pending_approval").length,
     approved: missions.filter((m) => m.status === "approved").length,
     rejected: missions.filter((m) => m.status === "rejected").length,
+    rate:     `${rate}%`,
   };
 
   const recent = [...missions]
@@ -119,13 +122,13 @@ export default function PlannerDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.36 }}
         >
-          <NoisePatternCard>
+          <PremiumCard>
             {/* Card header */}
             <div
-              className="flex items-center justify-between px-6 py-2"
-              style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+              className="flex items-center justify-between px-6 py-5"
+              style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}
             >
-              <p className="section-label">Recent Missions</p>
+              <p className="text-[11px] font-bold uppercase tracking-[0.15em]" style={{ color: "rgba(240,244,255,0.5)" }}>Recent Missions</p>
               <Link
                 href="/dashboard/planner/missions"
                 className="text-xs transition-colors hover:underline"
@@ -152,54 +155,43 @@ export default function PlannerDashboard() {
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                      {[
-                        "Mission",
-                        "Target",
-                        "Vehicle",
-                        "Launch Date",
-                        "Status",
-                        "",
-                      ].map((h) => (
-                        <th
-                          key={h}
-                          className="text-left px-6 py-2 text-[11px] font-semibold uppercase tracking-[0.08em] whitespace-nowrap align-middle"
-                          style={{ color: "rgba(240,244,255,0.35)" }}
-                        >
-                          {h}
-                        </th>
-                      ))}
+                    <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
+                      <th className="text-left px-6 py-4 text-[10px] font-bold uppercase tracking-widest whitespace-nowrap align-middle" style={{ color: "rgba(240,244,255,0.4)" }}>Mission</th>
+                      <th className="text-left px-6 py-4 text-[10px] font-bold uppercase tracking-widest whitespace-nowrap align-middle hidden sm:table-cell" style={{ color: "rgba(240,244,255,0.4)" }}>Target</th>
+                      <th className="text-left px-6 py-4 text-[10px] font-bold uppercase tracking-widest whitespace-nowrap align-middle hidden md:table-cell" style={{ color: "rgba(240,244,255,0.4)" }}>Vehicle</th>
+                      <th className="text-left px-6 py-4 text-[10px] font-bold uppercase tracking-widest whitespace-nowrap align-middle hidden md:table-cell" style={{ color: "rgba(240,244,255,0.4)" }}>Launch Date</th>
+                      <th className="text-left px-6 py-4 text-[10px] font-bold uppercase tracking-widest whitespace-nowrap align-middle" style={{ color: "rgba(240,244,255,0.4)" }}>Status</th>
+                      <th className="text-right px-6 py-4 text-[10px] font-bold uppercase tracking-widest whitespace-nowrap align-middle" style={{ color: "rgba(240,244,255,0.4)" }}>Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     {recent.map((m, i) => (
                       <tr
                         key={m.id}
-                        className="group row-animate transition-colors duration-150"
+                        className="group transition-all duration-200"
                         style={{
-                          borderBottom: "1px solid rgba(255,255,255,0.04)",
-                          animationDelay: `${i * 30}ms`,
+                          borderBottom: "1px solid rgba(255,255,255,0.03)",
                         }}
-                        onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(0,229,255,0.04)")}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.02)")}
                         onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                       >
-                        <td className="px-6 h-[52px] font-semibold text-[14px] truncate max-w-[160px]" style={{ color: "#F0F4FF" }}>
+                        <td className="px-6 py-4 font-semibold text-[14px] truncate max-w-[160px]" style={{ color: "#F0F4FF" }}>
                           {m.title}
                         </td>
-                        <td className="px-6 h-[52px] hidden sm:table-cell font-['JetBrains_Mono',monospace] text-[13px] capitalize" style={{ color: "rgba(240,244,255,0.6)" }}>
+                        <td className="px-6 py-4 hidden sm:table-cell font-['JetBrains_Mono',monospace] text-[13px] capitalize" style={{ color: "rgba(240,244,255,0.6)" }}>
                           {m.target_body}
                         </td>
-                        <td className="px-6 h-[52px] hidden md:table-cell font-['JetBrains_Mono',monospace] text-[13px] uppercase" style={{ color: "rgba(240,244,255,0.6)" }}>
+                        <td className="px-6 py-4 hidden md:table-cell font-['JetBrains_Mono',monospace] text-[13px] uppercase" style={{ color: "rgba(240,244,255,0.6)" }}>
                           {m.vehicle_class}
                         </td>
-                        <td className="px-6 h-[52px] hidden md:table-cell font-['JetBrains_Mono',monospace] text-[13px]" style={{ color: "rgba(240,244,255,0.6)" }}>
+                        <td className="px-6 py-4 hidden md:table-cell font-['JetBrains_Mono',monospace] text-[13px]" style={{ color: "rgba(240,244,255,0.6)" }}>
                           {m.launch_date ?? "—"}
                         </td>
-                        <td className="px-6 h-[52px]">
+                        <td className="px-6 py-4">
                           <StatusBadge status={m.status} />
                         </td>
-                        <td className="px-6 h-[52px]">
-                          <Link href={`/dashboard/planner/missions/${m.id}`} className="text-xs underline" style={{ color: "#00E5FF" }}>
+                        <td className="px-6 py-4 text-right">
+                          <Link href={`/dashboard/planner/missions/${m.id}`} className="text-xs font-semibold px-3 py-1.5 rounded-md transition-colors" style={{ color: "#00E5FF", background: "rgba(0,229,255,0.08)" }} onMouseEnter={(e)=>(e.currentTarget.style.background="rgba(0,229,255,0.15)")} onMouseLeave={(e)=>(e.currentTarget.style.background="rgba(0,229,255,0.08)")}>
                             View
                           </Link>
                         </td>
@@ -209,7 +201,7 @@ export default function PlannerDashboard() {
                 </table>
               </div>
             )}
-          </NoisePatternCard>
+          </PremiumCard>
         </motion.div>
       </div>
     </div>

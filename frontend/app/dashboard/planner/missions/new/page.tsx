@@ -16,7 +16,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import api from "@/lib/api";
 import { Button } from "@/components/ui/button";
-import { NoisePatternCard } from "@/components/ui/card-with-noise-pattern";
+import { PremiumCard } from "@/components/ui/card-with-noise-pattern";
 import { SafetyCanvas } from "@/components/planner/safety-canvas";
 import { WeatherGauge } from "@/components/planner/weather-gauge";
 
@@ -729,7 +729,7 @@ export default function NewMissionPage() {
       </div>
 
       {/* ── Step content ── */}
-      <NoisePatternCard>
+      <PremiumCard>
         <div className="rounded-xl p-6">
           <div className="mb-4">
             <h2 className="text-base font-semibold text-white flex items-center gap-2">
@@ -752,7 +752,7 @@ export default function NewMissionPage() {
             </motion.div>
           </AnimatePresence>
         </div>
-      </NoisePatternCard>
+      </PremiumCard>
 
       {/* ── Error ── */}
       {error && (

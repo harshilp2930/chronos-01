@@ -8,10 +8,11 @@ import {
   Rocket,
   AlertCircle,
   ArrowUpRight,
+  ChevronRight,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import api from "@/lib/api";
-import { NoisePatternCard } from "@/components/ui/card-with-noise-pattern";
+import { PremiumCard } from "@/components/ui/card-with-noise-pattern";
 import { StatusBadge } from "@/components/planner/status-badge";
 
 interface Mission {
@@ -114,7 +115,7 @@ export default function MissionsPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "rgba(240,244,255,0.3)" }} />
           <input
             type="text"
-            placeholder="Search missions\u2026"
+            placeholder="Search missions…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-9 transition-all duration-150 focus:outline-none"
@@ -159,7 +160,7 @@ export default function MissionsPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
-        <NoisePatternCard>
+        <PremiumCard>
           {loading ? (
             <div className="p-6 space-y-3">
               {[...Array(6)].map((_, i) => (
@@ -181,15 +182,14 @@ export default function MissionsPage() {
               <table className="w-full">
                 <thead>
                   <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                    {["Mission", "Target", "Pad", "Vehicle", "Launch Date", "\u0394V km/s", "Status", ""].map((h) => (
-                      <th
-                        key={h}
-                        className="text-left px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] whitespace-nowrap"
-                        style={{ color: "rgba(240,244,255,0.35)" }}
-                      >
-                        {h}
-                      </th>
-                    ))}
+                    <th className="text-left px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] whitespace-nowrap" style={{ color: "rgba(240,244,255,0.35)" }}>Mission</th>
+                    <th className="text-left px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] whitespace-nowrap hidden sm:table-cell" style={{ color: "rgba(240,244,255,0.35)" }}>Target</th>
+                    <th className="text-left px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] whitespace-nowrap hidden md:table-cell" style={{ color: "rgba(240,244,255,0.35)" }}>Pad</th>
+                    <th className="text-left px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] whitespace-nowrap hidden md:table-cell" style={{ color: "rgba(240,244,255,0.35)" }}>Vehicle</th>
+                    <th className="text-left px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] whitespace-nowrap hidden lg:table-cell" style={{ color: "rgba(240,244,255,0.35)" }}>Launch Date</th>
+                    <th className="text-left px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] whitespace-nowrap hidden lg:table-cell" style={{ color: "rgba(240,244,255,0.35)" }}>ΔV km/s</th>
+                    <th className="text-left px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] whitespace-nowrap" style={{ color: "rgba(240,244,255,0.35)" }}>Status</th>
+                    <th className="text-left px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] whitespace-nowrap" style={{ color: "rgba(240,244,255,0.35)" }}></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -256,7 +256,7 @@ export default function MissionsPage() {
               </table>
             </div>
           )}
-        </NoisePatternCard>
+        </PremiumCard>
       </motion.div>
     </div>
   );

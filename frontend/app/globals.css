@@ -249,3 +249,7 @@ code,
 .app-page-bg {
   background-color: #080E1A;
 }
+
+.dashboard-page {
+  padding: 24px;
+}

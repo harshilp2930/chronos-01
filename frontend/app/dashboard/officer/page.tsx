@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import api from "@/lib/api";
-import { NoisePatternCard } from "@/components/ui/card-with-noise-pattern";
+import { PremiumCard } from "@/components/ui/card-with-noise-pattern";
 import MissionStatsCards from "@/components/MissionStatsCards";
 import {
   Clock,
@@ -147,16 +147,17 @@ export default function OfficerHome() {
       {analytics && (
         <MissionStatsCards
           totalMissions={analytics.total_missions}
-          pending={analytics.pending}
           approved={analytics.approved}
           rejected={analytics.rejected}
+          approvalRate={analytics.approval_rate_pct}
+          loading={loading}
         />
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         {/* Pending queue */}
-        <NoisePatternCard className="lg:col-span-2">
+        <PremiumCard className="lg:col-span-2">
           <div
             className="flex items-center justify-between px-6 py-2"
             style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
@@ -175,7 +176,7 @@ export default function OfficerHome() {
             </div>
             <Link
               href="/dashboard/officer/missions"
-              className="text-left px-6 py-1 text-[11px] font-semibold uppercase tracking-[0.08em]"
+              className="flex items-center gap-1 px-6 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] whitespace-nowrap hover:opacity-80 transition-opacity"
               style={{ color: "#00E5FF" }}
             >
               View all <ArrowRight className="w-3 h-3" />
@@ -224,10 +225,10 @@ export default function OfficerHome() {
               ))}
             </div>
           )}
-        </NoisePatternCard>
+        </PremiumCard>
 
         {/* Activity feed */}
-        <NoisePatternCard>
+        <PremiumCard>
           <div
             className="flex items-center gap-2 px-6 py-4"
             style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
@@ -266,12 +267,12 @@ export default function OfficerHome() {
               })}
             </div>
           )}
-        </NoisePatternCard>
+        </PremiumCard>
       </div>
 
       {/* Planner performance table */}
       {!loading && analytics && analytics.planner_performance.length > 0 && (
-        <NoisePatternCard>
+        <PremiumCard>
           <div
             className="flex items-center justify-between px-6 py-4"
             style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
@@ -282,7 +283,7 @@ export default function OfficerHome() {
             </div>
             <Link
               href="/dashboard/officer/analytics"
-              className="flex items-center gap-1 text-xs transition-colors hover:underline"
+              className="flex items-center gap-1 text-xs transition-colors hover:underline whitespace-nowrap"
               style={{ color: "#00E5FF" }}
             >
               Full analytics <ArrowRight className="w-3 h-3" />
@@ -292,15 +293,11 @@ export default function OfficerHome() {
             <table className="w-full">
               <thead>
                 <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                  {["Planner", "Submitted", "Approved", "Rejected", "Rate"].map((header) => (
-                    <th
-                      key={header}
-                      className="text-left px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.08em]"
-                      style={{ color: "rgba(240,244,255,0.35)" }}
-                    >
-                      {header}
-                    </th>
-                  ))}
+                  <th className="text-left px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.08em]" style={{ color: "rgba(240,244,255,0.35)" }}>Planner</th>
+                  <th className="text-right px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.08em]" style={{ color: "rgba(240,244,255,0.35)" }}>Submitted</th>
+                  <th className="text-right px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.08em]" style={{ color: "rgba(240,244,255,0.35)" }}>Approved</th>
+                  <th className="text-right px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.08em]" style={{ color: "rgba(240,244,255,0.35)" }}>Rejected</th>
+                  <th className="text-right px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.08em]" style={{ color: "rgba(240,244,255,0.35)" }}>Rate</th>
                 </tr>
               </thead>
               <tbody>
@@ -313,10 +310,10 @@ export default function OfficerHome() {
                     onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                   >
                     <td className="px-6 h-[52px] text-[14px] font-semibold" style={{ color: "#F0F4FF" }}>{p.planner_name}</td>
-                    <td className="px-6 h-[52px] font-['JetBrains_Mono',monospace] text-[13px]" style={{ color: "rgba(240,244,255,0.6)" }}>{p.submitted}</td>
-                    <td className="px-6 h-[52px] font-['JetBrains_Mono',monospace] text-[13px]" style={{ color: "#00C896" }}>{p.approved}</td>
-                    <td className="px-6 h-[52px] font-['JetBrains_Mono',monospace] text-[13px]" style={{ color: "#FF3B5C" }}>{p.rejected}</td>
-                    <td className="px-6 h-[52px]">
+                    <td className="px-6 h-[52px] text-right font-['JetBrains_Mono',monospace] text-[13px]" style={{ color: "rgba(240,244,255,0.6)" }}>{p.submitted}</td>
+                    <td className="px-6 h-[52px] text-right font-['JetBrains_Mono',monospace] text-[13px]" style={{ color: "#00C896" }}>{p.approved}</td>
+                    <td className="px-6 h-[52px] text-right font-['JetBrains_Mono',monospace] text-[13px]" style={{ color: "#FF3B5C" }}>{p.rejected}</td>
+                    <td className="px-6 h-[52px] text-right">
                       <span
                         className="font-['JetBrains_Mono',monospace] text-xs px-2 py-0.5 rounded-full"
                         style={{
@@ -332,7 +329,7 @@ export default function OfficerHome() {
               </tbody>
             </table>
           </div>
-        </NoisePatternCard>
+        </PremiumCard>
       )}
     </div>
   );
