@@ -447,21 +447,21 @@ def export_pdf(
     )
     from reportlab.graphics.shapes import Drawing, Rect, String, Polygon
 
-    # ── Color palette (mirrors app design tokens) ──────────────────────────────
-    C_BG       = HexColor("#080E1A")
-    C_SURFACE  = HexColor("#0F1923")
-    C_ELEVATED = HexColor("#131F2E")
-    C_BORDER   = HexColor("#1A2D40")
-    C_CYAN     = HexColor("#00E5FF")
-    C_BLUE     = HexColor("#0066FF")
-    C_GREEN    = HexColor("#00C896")
-    C_AMBER    = HexColor("#F59E0B")
-    C_ORANGE   = HexColor("#FF7043")
-    C_RED      = HexColor("#FF3B5C")
-    C_LIME     = HexColor("#8BC34A")
-    C_TEXT     = HexColor("#F0F4FF")
-    C_TEXT_SEC = HexColor("#8B9FC0")
-    C_TEXT_MUT = HexColor("#4B6080")
+    # ── Color palette (Premium Light Theme) ────────────────────────────────────
+    C_BG       = HexColor("#FFFFFF")
+    C_SURFACE  = HexColor("#F8FAFC")
+    C_ELEVATED = HexColor("#F1F5F9")
+    C_BORDER   = HexColor("#E2E8F0")
+    C_CYAN     = HexColor("#0891B2")
+    C_BLUE     = HexColor("#2563EB")
+    C_GREEN    = HexColor("#059669")
+    C_AMBER    = HexColor("#D97706")
+    C_ORANGE   = HexColor("#EA580C")
+    C_RED      = HexColor("#DC2626")
+    C_LIME     = HexColor("#65A30D")
+    C_TEXT     = HexColor("#0F172A")
+    C_TEXT_SEC = HexColor("#475569")
+    C_TEXT_MUT = HexColor("#94A3B8")
     C_WHITE    = HexColor("#FFFFFF")
 
     PAGE_W, PAGE_H = A4
@@ -517,12 +517,12 @@ def export_pdf(
 
     status_label = mission.status.replace("_", " ").upper()
     status_hex = {
-        "DRAFT":     "#8B9FC0",
-        "SUBMITTED": "#0066FF",
-        "APPROVED":  "#00C896",
-        "REJECTED":  "#FF3B5C",
-        "IN REVIEW": "#F59E0B",
-    }.get(status_label, "#00E5FF")
+        "DRAFT":     "#475569",
+        "SUBMITTED": "#2563EB",
+        "APPROVED":  "#059669",
+        "REJECTED":  "#DC2626",
+        "IN REVIEW": "#D97706",
+    }.get(status_label, "#0891B2")
 
     # usable content width in points (A4 - left/right margins)
     CONTENT_W = PAGE_W - 4 * cm
@@ -606,10 +606,10 @@ def export_pdf(
         rp = max(0.0, min(1.0, risk_pct))
         nx = rp * w
         d.add(Rect(nx - 1.5, track_y - 5, 3, track_h + 10,
-                   fillColor=C_WHITE, strokeColor=None))
+                   fillColor=C_TEXT, strokeColor=None))
         d.add(Polygon(
             [nx, track_y - 5, nx - 5, track_y - 15, nx + 5, track_y - 15],
-            fillColor=C_WHITE, strokeColor=None,
+            fillColor=C_TEXT, strokeColor=None,
         ))
         # Percentage value below pointer
         d.add(String(nx, 2.0, f"{rp * 100:.1f}%",
@@ -820,7 +820,7 @@ def export_pdf(
     story.append(section_header("RESPONSIBLE PERSONNEL & APPROVALS", accent=C_GREEN))
     story.append(Spacer(1, 6))
     approval_status = "APPROVED \u2713" if mission.reviewed_by else "PENDING REVIEW"
-    approval_color = "#00C896" if mission.reviewed_by else "#808080"
+    approval_color = "#059669" if mission.reviewed_by else "#94A3B8"
     story.append(kv_table([
         ("Mission Planner",     planner.full_name if planner else "\u2014"),
         ("Planner Contact",     planner.email if planner else "\u2014"),

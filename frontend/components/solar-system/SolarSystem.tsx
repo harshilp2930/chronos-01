@@ -321,10 +321,12 @@ function Moon({
   earthPosRef,
   simTimeDaysRef,
   isTarget,
+  posRef,
 }: {
   earthPosRef: RefObject<THREE.Vector3>;
   simTimeDaysRef: RefObject<number>;
   isTarget: boolean;
+  posRef?: RefObject<THREE.Vector3>;
 }) {
   const groupRef = useRef<THREE.Group>(null);
 
@@ -333,7 +335,9 @@ function Moon({
     const angle = angleAtTime(MOON_PERIOD_DAYS, simDays, 0.5);
     const local = new THREE.Vector3(MOON_RADIUS_UNITS * Math.cos(angle), 0, MOON_RADIUS_UNITS * Math.sin(angle));
     const earthPos = earthPosRef.current ?? new THREE.Vector3();
-    if (groupRef.current) groupRef.current.position.copy(earthPos.clone().add(local));
+    const finalPos = earthPos.clone().add(local);
+    if (groupRef.current) groupRef.current.position.copy(finalPos);
+    if (posRef?.current) posRef.current.copy(finalPos);
   });
 
   return (
@@ -364,6 +368,50 @@ function Moon({
         </span>
       </Html>
     </group>
+  );
+}
+
+function MoonTransferPath({
+  earthPosRef,
+  moonPosRef,
+  missionProgress,
+}: {
+  earthPosRef: RefObject<THREE.Vector3>;
+  moonPosRef: RefObject<THREE.Vector3>;
+  missionProgress: number;
+}) {
+  const shipRef = useRef<THREE.Mesh>(null);
+  const [geometry] = useState(() => new THREE.BufferGeometry().setFromPoints([]));
+
+  useFrame(() => {
+    if (!earthPosRef.current || !moonPosRef.current) return;
+    const p1 = earthPosRef.current;
+    const p2 = moonPosRef.current;
+
+    const mid = new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5);
+    mid.y += 0.3; // an upward arc
+
+    const curve = new THREE.QuadraticBezierCurve3(p1, mid, p2);
+    const points = curve.getPoints(32);
+    geometry.setFromPoints(points);
+
+    if (shipRef.current) {
+      const t = Math.max(0, Math.min(1, missionProgress / 100));
+      shipRef.current.position.copy(curve.getPoint(t));
+    }
+  });
+
+  return (
+    <>
+      {/* @ts-expect-error three intrinsic typing */}
+      <line geometry={geometry}>
+        <lineBasicMaterial color={0x06b6d4} transparent opacity={0.85} />
+      </line>
+      <mesh ref={shipRef}>
+        <sphereGeometry args={[0.06, 12, 12]} />
+        <meshBasicMaterial color={0x22d3ee} />
+      </mesh>
+    </>
   );
 }
 
@@ -467,6 +515,7 @@ function Scene({
   const publishAccumulatorRef = useRef(0);
 
   const earthPosRef = useRef(new THREE.Vector3(PLANET_BY_KEY.earth.radiusUnits, 0, 0));
+  const moonPosRef = useRef(new THREE.Vector3());
 
   const targetKey = target.toLowerCase();
   const missionTarget = (Object.keys(ORBIT_RADIUS_AU) as PlanetKey[]).includes(targetKey as PlanetKey)
@@ -514,7 +563,15 @@ function Scene({
         </group>
       ))}
 
-      <Moon earthPosRef={earthPosRef} simTimeDaysRef={simTimeDaysRef} isTarget={targetKey === "moon"} />
+      <Moon earthPosRef={earthPosRef} simTimeDaysRef={simTimeDaysRef} isTarget={targetKey === "moon"} posRef={moonPosRef} />
+
+      {targetKey === "moon" && (
+        <MoonTransferPath
+          earthPosRef={earthPosRef}
+          moonPosRef={moonPosRef}
+          missionProgress={missionProgress}
+        />
+      )}
 
       {missionTarget && missionTarget !== "earth" && targetKey !== "moon" && (
         <HohmannTransfer
@@ -535,12 +592,14 @@ export interface SolarSystemViewerProps {
   target: string;
   trajectoryPoints?: Array<{ x: number; y: number; z: number }>;
   height?: number;
+  baseDate?: string | null;
 }
 
 export function SolarSystemViewer({
   target,
   trajectoryPoints,
   height = 500,
+  baseDate,
 }: SolarSystemViewerProps) {
   const [simScale, setSimScale] = useState(SIM_DAYS_PER_SECOND_DEFAULT);
   const [paused, setPaused] = useState(false);
@@ -549,6 +608,7 @@ export function SolarSystemViewer({
   const [trackedTarget, setTrackedTarget] = useState(target);
 
   const targetKey = target.toLowerCase();
+  const isMoonMission = targetKey === "moon";
   const missionTarget = (Object.keys(ORBIT_RADIUS_AU) as PlanetKey[]).includes(targetKey as PlanetKey)
     ? (targetKey as PlanetKey)
     : null;
@@ -561,19 +621,20 @@ export function SolarSystemViewer({
     }
   };
 
-  const activeMission = !!missionTarget && missionTarget !== "earth";
-  const transferDays = activeMission ? hohmannTransferDays("earth", missionTarget) : 0;
-  const semiMajorAU = activeMission ? (ORBIT_RADIUS_AU.earth + ORBIT_RADIUS_AU[missionTarget]) / 2 : 0;
-  const deltaV = activeMission ? hohmannDeltaV("earth", missionTarget) : 0;
+  const activeMission = (!!missionTarget && missionTarget !== "earth") || isMoonMission;
+  const transferDays = isMoonMission ? 3.0 : (missionTarget ? hohmannTransferDays("earth", missionTarget) : 0);
+  const semiMajorAU = isMoonMission ? 0.0025 : (missionTarget ? (ORBIT_RADIUS_AU.earth + ORBIT_RADIUS_AU[missionTarget]) / 2 : 0);
+  const deltaV = isMoonMission ? 5.60 : (missionTarget ? hohmannDeltaV("earth", missionTarget) : 0);
 
   const missionProgress =
     activeMission && transferDays > 0
       ? Math.max(0, Math.min(100, ((simTimeDays - missionStartDays) / transferDays) * 100))
       : 0;
 
-  const departureDate = formatSimDate(BASE_SIM_DATE, missionStartDays);
-  const arrivalDate = formatSimDate(BASE_SIM_DATE, missionStartDays + transferDays);
-  const simDate = formatSimDate(BASE_SIM_DATE, simTimeDays);
+  const actualBaseDate = baseDate ? new Date(baseDate) : BASE_SIM_DATE;
+  const departureDate = formatSimDate(actualBaseDate, missionStartDays);
+  const arrivalDate = formatSimDate(actualBaseDate, missionStartDays + transferDays);
+  const simDate = formatSimDate(actualBaseDate, simTimeDays);
 
   const earthPeriodSeconds = ORBITAL_PERIODS_DAYS.earth / Math.max(simScale, 1);
   const marsPeriodSeconds = ORBITAL_PERIODS_DAYS.mars / Math.max(simScale, 1);
@@ -655,7 +716,7 @@ export function SolarSystemViewer({
 
       {activeMission && (
         <div className="absolute bottom-3 left-3 z-10 rounded-lg border border-cyan-900 bg-black/60 px-4 py-3 font-mono text-xs backdrop-blur">
-          <p className="mb-2 font-bold text-cyan-400">🛸 TRANSFER: EARTH → {missionTarget.toUpperCase()}</p>
+          <p className="mb-2 font-bold text-cyan-400">🛸 TRANSFER: EARTH → {isMoonMission ? "MOON" : (missionTarget?.toUpperCase() ?? "")}</p>
 
           <div className="flex flex-col gap-1 text-slate-300">
             <div className="flex justify-between gap-8">

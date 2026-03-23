@@ -354,6 +354,7 @@ export default function OfficerMissionDetailPage() {
             target={mission?.target_body ?? "mars"}
             trajectoryPoints={mission?.trajectory_data?.trajectory_points}
             height={420}
+            baseDate={mission?.launch_date}
           />
         </div>
 

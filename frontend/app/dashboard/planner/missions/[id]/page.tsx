@@ -654,6 +654,7 @@ export default function MissionDetailPage() {
                 target={mission.target_body}
                 trajectoryPoints={trajData?.trajectory_points}
                 height={500}
+                baseDate={mission?.launch_date}
               />
             </div>
         </PremiumCard>
