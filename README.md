@@ -52,15 +52,16 @@ Weather Data -> ML Assessment -> Rule Validation -> GO / NO-GO Decision
 
 ## Key Features
 
-| Feature                  | Description                                                                  |
-| ------------------------ | ---------------------------------------------------------------------------- |
-| Hybrid ML Model          | Random Forest based scrub-risk prediction pipeline (`ml/step1..3`)           |
-| Real-Time Prediction API | `POST /api/v1/scrub/predict` with typed validation and risk response         |
-| Mission Management       | Full mission lifecycle (create, update, submit, approve, reject, export PDF) |
-| Role-Based Access        | JWT auth with officer/planner/individual flows                               |
-| Physics Tooling          | Lambert solver, propagation, safety-zone checks, optimization endpoints      |
-| 3D UI Experience         | Next.js + Three.js visuals (Earth/solar system effects and dashboards)       |
-| Launch-Site Coverage     | `sdsc`, `vssc`, `aki` support in weather/scrub flow                          |
+| Feature                   | Description                                                                  |
+| ------------------------- | ---------------------------------------------------------------------------- |
+| Hybrid ML Model           | Random Forest based scrub-risk prediction pipeline (`ml/step1..3`)           |
+| Real-Time Prediction API  | `POST /api/v1/scrub/predict` with typed validation and risk response         |
+| Genetic Algorithm (GA)    | AI-optimized launch windows and Delta-V calculations for all celestial bodies |
+| Mission Management        | Full mission lifecycle (create, update, submit, approve, reject)             |
+| 3D Trajectory Engine      | Next.js + Three.js visuals (Mars/Venus paths + custom Moon/Lunar Bezier arc)  |
+| Premium PDF Export        | Professionally designed Light Theme mission reports for official clearance   |
+| Aerospace Analytics       | Glassmorphic dashboards for mission planners and review officers             |
+| Launch-Site Coverage      | `sdsc`, `vssc`, `aki` support in weather/scrub flow                          |
 
 ---
 
@@ -82,6 +83,15 @@ Weather Data -> ML Assessment -> Rule Validation -> GO / NO-GO Decision
 
 ---
 
+## 3D Trajectory Visualization
+
+The platform includes a high-fidelity **Solar System Visualizer** (`frontend/components/solar-system`) that:
+- **Interplanetary (Heliocentric)**: Plots Lambert-propagation arcs for Mars and Venus missions.
+- **Lunar (Geocentric)**: Uses a custom quadratic Bezier engine to visualize Earth-Moon transfers at a visible scale.
+- **Dynamic Clock**: Synchronizes the 3D simulation time directly with the mission's scheduled `launch_date`.
+
+---
+
 ## Architecture
 
 ```text
@@ -89,29 +99,21 @@ chronos-01/
 |- backend/                    # FastAPI app, auth, missions, analytics, physics APIs
 |  |- main.py
 |  |- app/
-|  |  |- api/
-|  |  |  |- auth.py
-|  |  |  |- missions.py
-|  |  |  |- users.py
-|  |  |  |- analytics.py
-|  |  |  |- simulation.py
-|  |  |  |- safety.py
-|  |  |  |- optimization.py
-|  |  |  `- scrub.py
-|  |  |- ai/
-|  |  |- physics/
-|  |  |- models/
-|  |  `- schemas/
+|  |  |- api/                  # REST endpoints (auth, missions, users, analytics)
+|  |  |- ai/                   # Genetic Algorithm for orbital optimization
+|  |  |- physics/              # Lambert solvers, RK4 propagation, orbital mechanics
+|  |  |- models/               # SQLAlchemy DB models
+|  |  `- schemas/              # Pydantic validation schemas
 |  `- tests/
-|- frontend/                   # Next.js 14 app (landing + planner/officer dashboards)
-|  |- app/
-|  |- components/
-|  |- lib/
-|  `- store/
+|- frontend/                   # Next.js 14 app (Premium Glassmorphic UI)
+|  |- app/                     # App router pages (Planner / Officer views)
+|  |- components/              # SolarSystem, StatTiles, PremiumCard, Navbar
+|  |- lib/                     # API client, utility functions
+|  `- store/                   # Zustand state management
 `- ml/                         # Training data, model training, prediction scripts
-   |- step1_generate_data.py
-   |- step2_train_model.py
-   |- step3_predict.py
+   |- step1_generate_data.py   # Synthetic weather data generator
+   |- step2_train_model.py     # Random Forest training pipeline
+   |- step3_predict.py         # Live prediction inference script
    `- data/weather_labelled.csv
 ```
 
@@ -178,6 +180,15 @@ From repository root:
 python ml/step1_generate_data.py
 python ml/step2_train_model.py
 ```
+
+---
+
+## Demo Access
+
+| Role | Email | Password |
+| :--- | :--- | :--- |
+| **Officer** | `admin@chronos.dev` | `Admin123` |
+| **Planner** | `planner@chronos.dev` | `Planner123` |
 
 ---
 
@@ -249,8 +260,9 @@ Typical rule dimensions include:
 ```text
 Phase 1 - Backend Foundation           [done]
 Phase 2 - Physics + Scrub Intelligence [done]
-Phase 3 - Rich Frontend Experience     [in progress]
-Phase 4 - Production Hardening         [planned]
+Phase 3 - Rich Frontend Experience     [done]
+Phase 4 - Advanced Physics & Reports   [done]
+Phase 5 - Production Hardening         [planned]
 ```
 
 ---
