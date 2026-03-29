@@ -1,8 +1,15 @@
 "use client";
 
 import { Github, Twitter, Rocket, Satellite, Globe } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export default function Footer() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const stars = Array.from({ length: 60 }, (_, i) => {
     const seed = (i + 1) * 9973;
     const frac = (n: number) => n - Math.floor(n);
@@ -22,19 +29,20 @@ export default function Footer() {
   return (
     <footer className="relative overflow-hidden border-t border-space-600">
       <div className="pointer-events-none absolute inset-0">
-        {stars.map((star, i) => (
-          <div
-            key={`star-${i}`}
-            className="absolute rounded-full bg-white"
-            style={{
-              width: `${star.size}px`,
-              height: `${star.size}px`,
-              top: `${star.top}%`,
-              left: `${star.left}%`,
-              opacity: star.opacity,
-            }}
-          />
-        ))}
+        {mounted &&
+          stars.map((star, i) => (
+            <div
+              key={`star-${i}`}
+              className="absolute rounded-full bg-white"
+              style={{
+                width: `${star.size}px`,
+                height: `${star.size}px`,
+                top: `${star.top}%`,
+                left: `${star.left}%`,
+                opacity: star.opacity,
+              }}
+            />
+          ))}
         <div className="absolute bottom-0 left-1/4 h-48 w-96 rounded-full bg-neon-blue/5 blur-[80px]" />
         <div className="absolute bottom-0 right-1/4 h-48 w-96 rounded-full bg-neon-purple/5 blur-[80px]" />
       </div>

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { OfficerNavbar } from "@/components/officer/navbar";
 import AppPageLayout from "@/components/shared/AppPageLayout";
+import { ARIAWidget } from "@/components/aria/ARIAWidget";
 
 export default function OfficerLayout({
   children,
@@ -33,6 +34,7 @@ export default function OfficerLayout({
           {children}
         </main>
       </div>
+      <ARIAWidget />
     </AppPageLayout>
   );
 }

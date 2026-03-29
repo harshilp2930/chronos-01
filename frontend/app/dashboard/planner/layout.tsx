@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { PlannerNavbar } from "@/components/planner/navbar";
 import AppPageLayout from "@/components/shared/AppPageLayout";
+import { ARIAWidget } from "@/components/aria/ARIAWidget";
 
 export default function PlannerLayout({
   children,
@@ -33,6 +34,7 @@ export default function PlannerLayout({
           {children}
         </main>
       </div>
+      <ARIAWidget />
     </AppPageLayout>
   );
 }
