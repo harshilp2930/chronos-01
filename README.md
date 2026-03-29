@@ -1,204 +1,402 @@
-<div align="center">
+# Chronos-1
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:070b14,50:1a2d4a,100:4f8ef7&height=200&section=header&text=CHRONOS-1&fontSize=80&fontColor=ffffff&fontAlignY=38&desc=Mission%20Intelligence%20Optimizer&descAlignY=60&descSize=20&descColor=4f8ef7&animation=fadeIn" width="100%"/>
+Chronos-1 is a full-stack mission intelligence platform for space launch planning and review. It combines a FastAPI backend, a Next.js frontend, orbital mechanics utilities, a weather scrub risk model, analytics dashboards, PDF mission reporting, and an ARIA assistant for mission-focused chat and mission creation.
 
-<br/>
+## System Overview
 
-<p>
-  <img src="https://img.shields.io/badge/Status-Active%20Development-22c55e?style=for-the-badge&logo=rocket&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Model-Random%20Forest-4f8ef7?style=for-the-badge&logo=scikit-learn&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Accuracy-95.01%25-06b6d4?style=for-the-badge&logo=checkmarx&logoColor=white"/>
-  <img src="https://img.shields.io/badge/ROC--AUC-0.9551-a855f7?style=for-the-badge&logo=chartdotjs&logoColor=white"/>
-</p>
+Chronos-1 is built around three operating ideas:
 
-<p>
-  <img src="https://img.shields.io/badge/Next.js-14-black?style=flat-square&logo=next.js&logoColor=white"/>
-  <img src="https://img.shields.io/badge/FastAPI-0.100-009688?style=flat-square&logo=fastapi&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Three.js-r128-black?style=flat-square&logo=three.js&logoColor=white"/>
-  <img src="https://img.shields.io/badge/scikit--learn-1.3-F7931E?style=flat-square&logo=scikit-learn&logoColor=white"/>
-  <img src="https://img.shields.io/badge/License-Coming%20Soon-475569?style=flat-square"/>
-</p>
+- planners create and refine missions
+- officers review, approve, or reject submitted missions
+- the system enriches those decisions with trajectory, safety, weather, and analytics signals
 
-<br/>
+Supported launch sites:
 
-> **AI-powered weather scrub risk prediction for ISRO launches.**  
-> Chronos-1 combines mission planning, simulation, and a hybrid weather scrub model
-> to deliver actionable GO / NO-GO decision support for SDSC, VSSC, and Abdul Kalam Island.
+- `sdsc` - Satish Dhawan Space Centre, Sriharikota
+- `vssc` - Vikram Sarabhai Space Centre, Trivandrum
+- `aki` - Abdul Kalam Island
 
-<br/>
+Supported target bodies:
 
-</div>
+- `moon`
+- `mars`
+- `venus`
 
----
+Supported vehicle classes:
 
-## What is Chronos-1?
+- `sounding`
+- `sslv`
+- `pslv`
+- `gslv2`
+- `lvm3`
 
-**Chronos-1** is a full-stack mission intelligence platform with:
+## Major Capabilities
 
-- a **FastAPI backend** for mission workflows, simulation, safety checks, and analytics,
-- a **Next.js frontend** for planner/officer dashboards and interactive visuals,
-- an **ML weather scrub model** that predicts launch scrub risk using coastal weather features and LWCC-style overrides.
-
-It is designed around the three major ISRO launch locations:
-**SDSC Sriharikota**, **VSSC Trivandrum**, and **Abdul Kalam Island**.
-
-```text
-Weather Data -> ML Assessment -> Rule Validation -> GO / NO-GO Decision
-   (8 params)      (RF model)      (hard overrides)      (API response)
-```
-
----
-
-## Key Features
-
-| Feature                   | Description                                                                  |
-| ------------------------- | ---------------------------------------------------------------------------- |
-| Hybrid ML Model           | Random Forest based scrub-risk prediction pipeline (`ml/step1..3`)           |
-| Real-Time Prediction API  | `POST /api/v1/scrub/predict` with typed validation and risk response         |
-| Genetic Algorithm (GA)    | AI-optimized launch windows and Delta-V calculations for all celestial bodies |
-| Mission Management        | Full mission lifecycle (create, update, submit, approve, reject)             |
-| 3D Trajectory Engine      | Next.js + Three.js visuals (Mars/Venus paths + custom Moon/Lunar Bezier arc)  |
-| Premium PDF Export        | Professionally designed Light Theme mission reports for official clearance   |
-| Aerospace Analytics       | Glassmorphic dashboards for mission planners and review officers             |
-| Launch-Site Coverage      | `sdsc`, `vssc`, `aki` support in weather/scrub flow                          |
-
----
-
-## Model Performance
-
-<div align="center">
-
-|    Metric     |  Score   |
-| :-----------: | :------: |
-| Test Accuracy |  95.01%  |
-|    ROC-AUC    |  0.9551  |
-| Avg Precision |  0.9550  |
-|   F1 Macro    |  0.9451  |
-| CV Stability  | +/-0.008 |
-
-</div>
-
-> Metrics are from current model/report artifacts in `ml/`.
-
----
-
-## 3D Trajectory Visualization
-
-The platform includes a high-fidelity **Solar System Visualizer** (`frontend/components/solar-system`) that:
-- **Interplanetary (Heliocentric)**: Plots Lambert-propagation arcs for Mars and Venus missions.
-- **Lunar (Geocentric)**: Uses a custom quadratic Bezier engine to visualize Earth-Moon transfers at a visible scale.
-- **Dynamic Clock**: Synchronizes the 3D simulation time directly with the mission's scheduled `launch_date`.
-
----
+- Mission lifecycle management: draft, submit, approve, reject, update, delete
+- Role-aware dashboards for officer, planner, and individual users
+- Automatic trajectory generation for supported targets during mission creation/update
+- Lambert transfer and propagation utilities for simulation workflows
+- Weather scrub risk scoring backed by a trained hybrid model
+- LWCC-style deterministic guardrails layered on top of probabilistic risk
+- Planner and officer analytics endpoints for operational visibility
+- PDF export for mission reports
+- ARIA assistant for space-ops Q&A and mission creation from chat
+- Interactive frontend visuals including mission views and solar-system style displays
 
 ## Architecture
 
 ```text
 chronos-01/
-|- backend/                    # FastAPI app, auth, missions, analytics, physics APIs
-|  |- main.py
-|  |- app/
-|  |  |- api/                  # REST endpoints (auth, missions, users, analytics)
-|  |  |- ai/                   # Genetic Algorithm for orbital optimization
-|  |  |- physics/              # Lambert solvers, RK4 propagation, orbital mechanics
-|  |  |- models/               # SQLAlchemy DB models
-|  |  `- schemas/              # Pydantic validation schemas
-|  `- tests/
-|- frontend/                   # Next.js 14 app (Premium Glassmorphic UI)
-|  |- app/                     # App router pages (Planner / Officer views)
-|  |- components/              # SolarSystem, StatTiles, PremiumCard, Navbar
-|  |- lib/                     # API client, utility functions
-|  `- store/                   # Zustand state management
-`- ml/                         # Training data, model training, prediction scripts
-   |- step1_generate_data.py   # Synthetic weather data generator
-   |- step2_train_model.py     # Random Forest training pipeline
-   |- step3_predict.py         # Live prediction inference script
-   `- data/weather_labelled.csv
+|- backend/                     FastAPI API, auth, missions, analytics, physics, scrub model integration
+|- frontend/                    Next.js app router frontend, dashboards, ARIA UI, internal API routes
+|- ml/                          Data generation, model training, inference scripts, report artifacts
+`- README.md                    Root system guide
 ```
 
----
+Request flow at a high level:
 
-## Quick Start
+```text
+Frontend UI -> Next.js app -> FastAPI backend -> DB / Physics / Analytics / ML
+                    |
+                    `-> /api/aria -> Gemini API (server-side only)
+```
+
+## Backend
+
+The backend lives in `backend/main.py` and exposes the primary API surface.
+
+Core backend responsibilities:
+
+- authentication and JWT-based access control
+- mission CRUD and approval workflow
+- mission simulation and trajectory generation
+- weather scrub scoring and weather-related endpoints
+- analytics for planners and officers
+- mission PDF export
+- startup-time scrub model preparation and loading
+
+Key route groups:
+
+- `/api/auth/*`
+- `/api/missions/*`
+- `/api/users/*`
+- `/api/analytics/*`
+- `/api/simulation/*`
+- `/api/safety/*`
+- `/api/optimization/*`
+- `/api/v1/scrub/*`
+- `/api/v1/weather/*`
+- `/health`
+- `/docs`
+
+Implementation areas:
+
+- `backend/app/api/` - REST endpoints
+- `backend/app/models/` - SQLAlchemy models
+- `backend/app/schemas/` - Pydantic schemas
+- `backend/app/core/` - config, database, security
+- `backend/app/physics/` - Lambert, propagation, safety calculations
+- `backend/app/ai/` - scrub model and optimization helpers
+- `backend/tests/` - API tests
+
+## Frontend
+
+The frontend lives under `frontend/` and is a Next.js App Router application.
+
+Core frontend responsibilities:
+
+- authentication screens and token-based session handling
+- planner and officer dashboards
+- mission forms and mission detail views
+- analytics and reference pages
+- ARIA chat widget and mission creation UX
+- internal route proxying for ARIA so the Gemini API key is never exposed to the browser
+
+Notable frontend areas:
+
+- `frontend/app/` - pages and route handlers
+- `frontend/components/` - UI building blocks and dashboard modules
+- `frontend/components/aria/` - ARIA chat panel, message rendering, widget shell
+- `frontend/lib/api.ts` - Axios client for backend calls
+- `frontend/lib/aria-engine.ts` - browser-side ARIA helper calling internal `/api/aria`
+- `frontend/app/api/aria/route.ts` - server-side Gemini proxy route
+- `frontend/store/` - Zustand state
+
+## ARIA Assistant
+
+ARIA is a mission-focused assistant integrated into the frontend.
+
+What ARIA can do:
+
+- answer questions related to space operations, ISRO, orbital mechanics, and Chronos-1
+- generate structured mission creation payloads from natural language
+- hand off successful mission payloads into the existing mission creation flow
+
+Security model:
+
+- the browser calls `POST /api/aria` on the Next.js app
+- the Next.js route makes the outbound Gemini request on the server
+- `GEMINI_API_KEY` stays server-side and should never use a `NEXT_PUBLIC_` prefix
+
+## Mission Lifecycle
+
+Chronos-1 implements a role-aware mission flow:
+
+1. A planner creates a mission in `draft`
+2. The planner updates mission parameters and can run simulation
+3. The planner submits the mission for review
+4. An officer approves or rejects the mission
+5. Approved or rejected missions are included in analytics and reporting
+
+Role behavior:
+
+- `planner` can create, update, submit, and inspect owned missions
+- `officer` can review all missions and approve/reject pending ones
+- `individual` can create missions but does not participate in approval flow
+
+## Weather Scrub Intelligence
+
+Chronos-1 includes a weather scrub risk pipeline supported by assets in `ml/`.
+
+Current model workflow:
+
+- `ml/step1_generate_data.py` generates labeled weather data
+- `ml/step2_train_model.py` trains the scrub model
+- `ml/step3_predict.py` performs inference workflows
+
+Backend startup behavior:
+
+- if the scrub model artifact does not exist, the backend attempts to generate/train it
+- the model is then loaded for API use
+
+The platform combines:
+
+- statistical prediction from the trained model
+- deterministic launch-rule style constraints
+- site-aware reasoning for supported launch locations
+
+## Simulation, Physics, and Reporting
+
+The system includes several mission-enrichment capabilities:
+
+- Lambert-style trajectory solving
+- propagated transfer path generation
+- safety and corridor calculations
+- launch-related optimization helpers
+- mission PDF export with formatted report sections
+
+Mission endpoints can persist trajectory and delta-v data so mission records remain useful after simulation.
+
+## Analytics
+
+Planner analytics include:
+
+- total missions
+- counts by status, target, and vehicle
+- average delta-v
+- average scrub risk
+- average approval time
+- delta-v over time
+
+Officer analytics include:
+
+- system-wide totals
+- approval and rejection counts
+- pending review counts
+- approval rate
+- planner performance summaries
+- success breakdowns by vehicle and target
+- monthly mission volume
+
+## Tech Stack
+
+Frontend:
+
+- Next.js `16.1.6`
+- React `19.2.3`
+- TypeScript
+- Tailwind CSS
+- Framer Motion
+- Three.js / React Three Fiber
+- Zustand
+- Axios
+
+Backend:
+
+- FastAPI `0.115.5`
+- SQLAlchemy `2.0.36`
+- Alembic
+- Pydantic Settings
+- python-jose
+- bcrypt
+- SlowAPI
+- ReportLab
+
+ML and scientific tooling:
+
+- scikit-learn `1.6.0`
+- pandas `2.2.3`
+- numpy `2.2.0`
+- scipy `1.14.1`
+- joblib
+
+## Local Development Setup
 
 ### Prerequisites
 
-```bash
-node   >= 18
-python >= 3.10
-npm    >= 9
-```
+- Node.js 18+
+- npm 9+
+- Python 3.10+
+- PostgreSQL if you want to use the default backend database URL
 
-### 1. Clone
-
-```bash
-git clone https://github.com/harshilp2930/chronos-01.git
-cd chronos-01
-```
-
-### 2. Backend setup
+## Backend Setup
 
 ```bash
 cd backend
 python -m venv .venv
-# Windows:
+```
+
+Windows:
+
+```bash
 .venv\Scripts\activate
-# macOS/Linux:
-# source .venv/bin/activate
+```
 
+macOS/Linux:
+
+```bash
+source .venv/bin/activate
+```
+
+Install dependencies:
+
+```bash
 pip install -r requirements.txt
+```
 
-# Optional: seed demo users and sample data
-python seed_demo_data.py
+Create `backend/.env`:
 
-# Start API
+```env
+APP_ENV=development
+DEBUG=True
+DATABASE_URL=postgresql://postgres:password@localhost:5432/chronos1
+SECRET_KEY=change-me-to-a-256-bit-random-hex-string
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=1440
+REFRESH_TOKEN_EXPIRE_DAYS=7
+FRONTEND_URL=http://localhost:3000
+NASA_JPL_API_KEY=
+OPENWEATHER_API_KEY=
+```
+
+Run the API:
+
+```bash
 uvicorn main:app --reload --port 8000
 ```
 
-Backend endpoints:
+Useful backend URLs:
 
-- Docs: `http://localhost:8000/docs`
-- Health: `http://localhost:8000/health`
+- `http://localhost:8000/health`
+- `http://localhost:8000/docs`
+- `http://localhost:8000/redoc`
 
-### 3. Frontend setup
+## Frontend Setup
 
 ```bash
 cd frontend
 npm install
+```
+
+Create `frontend/.env.local`:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8000
+GEMINI_API_KEY=your_server_side_gemini_key
+```
+
+Run the frontend:
+
+```bash
 npm run dev
 ```
 
 Frontend URL:
 
-- App: `http://localhost:3000`
+- `http://localhost:3000`
 
-### 4. Optional model regeneration
+## Demo Data
 
-From repository root:
+Seed demo users and missions:
 
 ```bash
-python ml/step1_generate_data.py
-python ml/step2_train_model.py
+cd backend
+python seed_demo_data.py
 ```
 
----
+Demo credentials currently seeded by the repo:
 
-## Demo Access
+- Officer: `admin@chronos.dev` / `Admin123`
+- Planner: `planner@chronos.dev` / `Planner123`
+- Planner 2: `planner2@chronos.dev` / `Planner234`
+- Individual: `individual@chronos.dev` / `Individual123`
 
-| Role | Email | Password |
-| :--- | :--- | :--- |
-| **Officer** | `admin@chronos.dev` | `Admin123` |
-| **Planner** | `planner@chronos.dev` | `Planner123` |
+## Running Tests
 
----
+Backend tests:
 
-## API Reference
+```bash
+cd backend
+pytest
+```
 
-### Weather Scrub
+Frontend lint:
+
+```bash
+cd frontend
+npm run lint
+```
+
+Frontend type-check:
+
+```bash
+cd frontend
+npx tsc --noEmit
+```
+
+## Main API Surface
+
+Authentication:
+
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `GET /api/auth/me`
+- `POST /api/auth/change-password`
+
+Missions:
+
+- `POST /api/missions/`
+- `GET /api/missions/`
+- `GET /api/missions/{mission_id}`
+- `PUT /api/missions/{mission_id}`
+- `DELETE /api/missions/{mission_id}`
+- `POST /api/missions/{mission_id}/submit`
+- `POST /api/missions/{mission_id}/approve`
+- `POST /api/missions/{mission_id}/reject`
+- `POST /api/missions/{mission_id}/simulate`
+- `GET /api/missions/{mission_id}/export-pdf`
+
+Analytics:
+
+- `GET /api/analytics/planner`
+- `GET /api/analytics/officer`
+
+Scrub and weather:
 
 - `POST /api/v1/scrub/predict`
+- weather endpoints under `/api/v1`
 
-Request body:
+## Example Scrub Prediction Request
 
 ```json
 {
@@ -214,115 +412,54 @@ Request body:
 }
 ```
 
-### Core Platform APIs
+## Repository Notes
 
-- `POST /api/auth/register`
-- `POST /api/auth/login`
-- `GET /api/auth/me`
-- `GET /api/missions/`
-- `POST /api/missions/`
-- `POST /api/missions/{mission_id}/submit`
-- `POST /api/missions/{mission_id}/approve`
-- `POST /api/missions/{mission_id}/reject`
-- `GET /api/missions/{mission_id}/export-pdf`
-- `GET /api/analytics/planner`
-- `GET /api/analytics/officer`
+- `frontend/.env.local` should never expose Gemini with a `NEXT_PUBLIC_` variable
+- if a Gemini key was ever exposed in browser DevTools, rotate it
+- the backend currently defaults to PostgreSQL via `DATABASE_URL`
+- backend startup may auto-build the scrub model if the artifact is missing
+- there are separate `README.md` files in some subfolders for narrower scope docs
 
----
+## Troubleshooting
 
-## Launch Sites
+If the frontend cannot reach the backend:
 
-| Site ID | Name                                      | Coordinates  |
-| :-----: | ----------------------------------------- | :----------: |
-| `sdsc`  | Satish Dhawan Space Centre (Sriharikota)  | 13.7N, 80.2E |
-| `vssc`  | Vikram Sarabhai Space Centre (Trivandrum) | 8.5N, 76.9E  |
-|  `aki`  | Abdul Kalam Island                        | 15.1N, 82.9E |
+- confirm `NEXT_PUBLIC_API_URL` matches your FastAPI host and port
+- confirm `FRONTEND_URL` in `backend/.env` matches your Next.js origin
+- check CORS behavior from `backend/main.py`
 
----
+If ARIA is not working:
 
-## LWCC-Style Guardrails
+- confirm `GEMINI_API_KEY` exists in `frontend/.env.local`
+- restart the Next.js dev server after changing env values
+- verify the browser calls `/api/aria`, not Google directly
 
-Chronos-1 applies deterministic weather checks in addition to ML probability.
-When a hard rule is violated, response can be forced to **NO-GO**.
+If the backend fails at startup:
 
-Typical rule dimensions include:
-
-- wind speed and gusts
-- visibility
-- cloud ceiling
-- precipitation
-- lightning distance
-
----
-
-## Roadmap
-
-```text
-Phase 1 - Backend Foundation           [done]
-Phase 2 - Physics + Scrub Intelligence [done]
-Phase 3 - Rich Frontend Experience     [done]
-Phase 4 - Advanced Physics & Reports   [done]
-Phase 5 - Production Hardening         [planned]
-```
-
----
+- confirm the database is reachable
+- confirm Python dependencies installed correctly
+- inspect whether model generation/training failed during startup
 
 ## Contributing
 
-```bash
-# 1. Create branch
-git checkout -b feature/your-feature
-
-# 2. Commit
-git commit -m "feat: add your feature"
-
-# 3. Push
-git push origin feature/your-feature
-```
-
-Commit tags:
-
-```text
-feat  fix  docs  style  refactor  ml  ui
-```
-
----
-
-## Environment Variables
-
-Create your own `backend/.env` file for environment variables. There is no .env.example in this repo.
-
-Example backend values:
+Typical workflow:
 
 ```bash
-ENVIRONMENT=development
-FRONTEND_URL=http://localhost:3000
-DATABASE_URL=sqlite:///./chronos1.db
-SECRET_KEY=change-me
-ACCESS_TOKEN_EXPIRE_MINUTES=30
+git checkout -b feature/your-change
+git commit -m "feat: describe your change"
+git push origin feature/your-change
 ```
 
-Example frontend values:
+Suggested commit prefixes:
 
-```bash
-NEXT_PUBLIC_API_URL=http://localhost:8000
-```
-
----
+- `feat`
+- `fix`
+- `docs`
+- `refactor`
+- `test`
+- `ui`
+- `ml`
 
 ## License
 
-No formal OSS license has been added yet.
-All rights reserved unless a license is published in this repository.
-
----
-
-<div align="center">
-
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:4f8ef7,50:1a2d4a,100:070b14&height=120&section=footer&animation=fadeIn" width="100%"/>
-
-**Built for mission confidence: Predict. Assess. Launch.**
-
-SDSC - VSSC - AKI - CHRONOS-1
-
-</div>
+No formal open-source license is currently published in this repository. Treat the project as all-rights-reserved unless a license file is added later.
